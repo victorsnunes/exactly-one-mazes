@@ -13,8 +13,8 @@ testBoard = [
 
 def main():
     
-    pg = Screen()
-    pg.set_up(testBoard)
+    screen = Screen()
+    screen.set_up(testBoard)
 
     """   
     print("Input: ")
@@ -34,7 +34,7 @@ def main():
     elif (game_mode == 2):
         pass 
     """
-    humanPlay(testBoard)
+    humanPlay(testBoard, screen)
 
     pygame.quit()
     print("quitting...")
@@ -93,7 +93,6 @@ def Lvisited(board, x, y):
 def possibleOperations(board, position):
     operations = []
 
-
     #Check if it's possible to move up
     if position.y + 1 < len(board) and (board[position.x][position.y + 1] != 2) and not Lvisited(board, position.x, position.y + 1):
         operations.append(Operation.MOVE_UP)
@@ -129,7 +128,7 @@ def gameOver(board):
     n = len(board)
     return board[n - 1][n - 1] == 1
 
-def humanPlay(board):
+def humanPlay(board, screen):
 
     #Scan the board and stores all its L shaped figures
     l_figures = set()
@@ -141,7 +140,7 @@ def humanPlay(board):
     position = Position()
 
     while True:
-        # printBoard(board)
+        screen.draw_board(board)
         possibleOps = possibleOperations(board, position)
 
         # print("Choose your move:\n")
@@ -160,7 +159,7 @@ def humanPlay(board):
         move = getKeyPress()
         
         if move in possibleOps:
-            #TODO: Not working
+            #TODO: Not working, not sure why
             operation(board, position, move)
         
         if gameOver(board) or move == Operation.QUIT:
