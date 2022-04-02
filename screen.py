@@ -1,4 +1,3 @@
-from turtle import window_height, window_width
 import pygame
 
 class Screen:
@@ -35,10 +34,9 @@ class Screen:
         for y in range(0, board_size):
             wy = 0
             for x in range(0, board_size):
-                print("x = {} y = {} wx = {} wy = {} Bxy = {}".format(x, y, wx, wy, board[x][y]))
                 rect = pygame.Rect(wx, wy, step, step)
                 if board[x][y] == 1:
-                    pygame.draw.rect(self.screen, self.RED, rect, 0)
+                    pygame.draw.circle(self.screen, self.RED, ((wx + step/2), (wy + step/2)), 10)
                 if board[x][y] >= 3:
                     pygame.draw.rect(self.screen, self.l_color[board[x][y]], rect, 0)
                 pygame.draw.rect(self.screen, self.BLACK, rect, 1)

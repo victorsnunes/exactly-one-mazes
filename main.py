@@ -1,25 +1,25 @@
 from enum import Enum
-import screen
+from screen import Screen 
 import pygame
 
 testBoard = [
     [5, 5, 5, 7, 7, 0],
-    [0, 4, 5, 7, 6, 0],
-    [0, 4, 0, 7, 6, 8],
-    [0, 4, 4, 6, 6, 8],
-    [0, 3, 3, 3, 8, 8],
-    [0, 0, 0, 3, 0, 0],
+    [0, 3, 5, 7, 6, 0],
+    [0, 3, 0, 7, 6, 8],
+    [0, 3, 3, 6, 6, 8],
+    [0, 4, 4, 4, 8, 8],
+    [1, 0, 0, 4, 0, 0],
 ]
 
 def main():
     
-    pg = screen.Screen()
+    pg = Screen()
     pg.set_up(testBoard)
 
+    """   
     print("Input: ")
     game_mode = int(input())
 
-    """   
     print("Welcome to the Only One Mazes puzzle!\n\n")
 
     
@@ -31,10 +31,10 @@ def main():
     game_mode = int(input())
     
     if (game_mode == 1):
-        humanPlay(testBoard)
     elif (game_mode == 2):
         pass 
     """
+    humanPlay(testBoard)
 
     pygame.quit()
     print("quitting...")
@@ -44,13 +44,15 @@ def getKeyPress():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 return Operation.MOVE_LEFT
-            if event.key == pygame.K_UP:
+            elif event.key == pygame.K_UP:
                 return Operation.MOVE_UP
-            if event.key == pygame.K_RIGHT:
+            elif event.key == pygame.K_RIGHT:
                 return Operation.MOVE_RIGHT
-            if event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN:
                 return Operation.MOVE_DOWN
-
+        elif event.type == pygame.QUIT:
+            return Operation.QUIT
+    
 def printBoard(board):
     for line in board:
         print(line)
@@ -82,6 +84,7 @@ class Operation(Enum):
     MOVE_RIGHT = 1
     MOVE_DOWN = 2
     MOVE_LEFT = 3
+    QUIT = 9
 
 
 def Lvisited(board, x, y):
@@ -138,30 +141,29 @@ def humanPlay(board):
     position = Position()
 
     while True:
-        printBoard(board)
+        # printBoard(board)
         possibleOps = possibleOperations(board, position)
 
-        print("Choose your move:\n")
-        print("1. Move up\n")
-        print("2. Move right\n")
-        print("3. Move down\n")
-        print("4. Move left\n\n")
+        # print("Choose your move:\n")
+        # print("1. Move up\n")
+        # print("2. Move right\n")
+        # print("3. Move down\n")
+        # print("4. Move left\n\n")
 
-        print("Possible moves: ")
-        for op in possibleOps:
-            print(op + " ")
-        print("\n\n")
+        # print("Possible moves: ")
+        # for op in possibleOps:
+        #     print(op + " ")
+        # print("\n\n")
 
-        input = int(input)
-
-        '''
+        # input = int(input)
+        
         move = getKeyPress()
         
         if move in possibleOps:
+            #TODO: Not working
             operation(board, position, move)
-        '''
-
-        if gameOver(board):
+        
+        if gameOver(board) or move == Operation.QUIT:
             break
 
 if __name__ == "__main__":
