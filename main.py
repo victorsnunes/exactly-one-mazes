@@ -1,4 +1,5 @@
 from enum import Enum
+import screen
 import pygame
 
 testBoard = [
@@ -11,10 +12,14 @@ testBoard = [
 ]
 
 def main():
+    
+    pg = screen.Screen()
+    pg.set_up(testBoard)
 
-    pygame.init()
-    #window = pygame.display.set_mode(300, 300)
+    print("Input: ")
+    game_mode = int(input())
 
+    """   
     print("Welcome to the Only One Mazes puzzle!\n\n")
 
     
@@ -28,7 +33,8 @@ def main():
     if (game_mode == 1):
         humanPlay(testBoard)
     elif (game_mode == 2):
-        pass
+        pass 
+    """
 
     pygame.quit()
     print("quitting...")
