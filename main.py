@@ -53,22 +53,6 @@ class Position:
     def __init__(self, x_pos = 0, y_pos = 0):
         self.x = x_pos
         self.y = y_pos
-
-class LShapedFigure:
-
-    def __init__(self, num):
-        self.value = num
-        self.visited = False
-    
-    def visit(self):
-        self.visited = True
-
-    def __eq__(self, other):
-        return (isinstance(other, self.__class__) and
-            getattr(other, 'value', None) == self.value)
-
-    def __hash__(self):
-        return hash(str(self.value))
     
 
 class Operation(Enum):
@@ -78,32 +62,31 @@ class Operation(Enum):
     MOVE_LEFT = "left"
 
 
-def Lvisited(board, x, y):
-    return False
+def LnotVisited(element, l_figures):
+    return element == 0 or element in l_figures
 
-def possibleOperations(board, position):
+def possibleOperations(board, position, l_figures):
     operations = []
 
-
     #Check if it's possible to move up
-    if position.y + 1 < len(board) and (board[position.x][position.y + 1] != 2) and not Lvisited(board, position.x, position.y + 1):
+    if position.y + 1 < len(board) and (board[position.x][position.y + 1] != 2) and LnotVisited(board[position.x][ position.y + 1], l_figures):
         operations.append(Operation.MOVE_RIGHT)
 
     #Check if it's possible to move right
-    if position.x + 1 < len(board) and (board[position.x + 1][position.y] != 2) and not Lvisited(board, position.x + 1, position.y):
+    if position.x + 1 < len(board) and (board[position.x + 1][position.y] != 2) and LnotVisited(board[position.x + 1][ position.y], l_figures):
         operations.append(Operation.MOVE_DOWN)
     
     #Check if it's possible to move down
-    if position.y - 1 >= 0 and (board[position.x][position.y - 1] != 2) and not Lvisited(board, position.x, position.y - 1):
+    if position.y - 1 >= 0 and (board[position.x][position.y - 1] != 2) and LnotVisited(board[position.x][ position.y - 1], l_figures):
         operations.append(Operation.MOVE_LEFT)
 
     #Check if it's possible to move left
-    if position.x - 1 >= 0 and (board[position.x - 1][position.y] != 2) and not Lvisited(board, position.x - 1, position.y):
+    if position.x - 1 >= 0 and (board[position.x - 1][position.y] != 2) and LnotVisited(board[position.x - 1][ position.y], l_figures):
         operations.append(Operation.MOVE_UP)
 
     return operations
 
-def makeMove(board, position, op):
+def makeMove(board, position, op, l_figures):
     board[position.x][position.y] = 2
     #TODO: Add the l in the visited list
     if op == Operation.MOVE_RIGHT:
@@ -114,6 +97,10 @@ def makeMove(board, position, op):
         position.y -= 1
     if op == Operation.MOVE_UP:
         position.x -= 1
+
+    element = board[position.x][position.y]
+    if (element in l_figures):
+        l_figures.remove(element)
     board[position.x][position.y] = 1
 
 def gameOver(board):
@@ -127,18 +114,17 @@ def humanPlay(board):
     for row in board:
         for element in row:
             if element >= 3:
-                l_figures.add(LShapedFigure(element))
+                l_figures.add(element)
 
     position = Position(len(board) - 1 ,0)
 
-    print("x = ", position.x)
-    print("y = ", position.y)
-
     while True:
         printBoard(board)
-        print("x = ", position.x)
-        print("y = ", position.y)
-        possibleOps = possibleOperations(board, position)
+        possibleOps = possibleOperations(board, position, l_figures)
+
+        if (possibleOps == []):
+            print("No more legal moves to make, you lost :(")
+            print("Better luck next time")
 
         print("\nPossible moves: ")
         for op in possibleOps:
@@ -166,13 +152,13 @@ def humanPlay(board):
             if (chosen_move in possibleOps):
                 break
 
-        makeMove(board, position, chosen_move) 
+        makeMove(board, position, chosen_move, l_figures) 
 
         '''
         move = getKeyPress()
         
         if move in possibleOps:
-            makeMove(board, position, move)
+            makeMove(board, position, move, l_figures)
         '''
 
         if gameOver(board):
