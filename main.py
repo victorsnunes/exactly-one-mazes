@@ -1,4 +1,4 @@
-from enum import Enum
+from util import Operation
 from screen import Screen 
 import pygame
 
@@ -77,15 +77,6 @@ class LShapedFigure:
 
     def __hash__(self):
         return hash(str(self.value))
-    
-
-class Operation(Enum):
-    MOVE_UP = 0
-    MOVE_RIGHT = 1
-    MOVE_DOWN = 2
-    MOVE_LEFT = 3
-    QUIT = 9
-
 
 def Lvisited(board, x, y):
     return False
@@ -140,9 +131,12 @@ def humanPlay(board, screen):
     position = Position()
 
     while True:
-        screen.draw_board(board)
         possibleOps = possibleOperations(board, position)
 
+        # Test
+        possibleOps = [Operation.MOVE_RIGHT, Operation.MOVE_UP]
+        screen.draw_board(board, possibleOps)
+        
         # print("Choose your move:\n")
         # print("1. Move up\n")
         # print("2. Move right\n")
