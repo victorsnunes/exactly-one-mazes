@@ -39,6 +39,7 @@ def main():
     pygame.quit()
     print("quitting...")
 
+# Input Handler
 def getKeyPress():
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -52,11 +53,12 @@ def getKeyPress():
                 return Operation.MOVE_DOWN
         elif event.type == pygame.QUIT:
             return Operation.QUIT
-    
+  
 def printBoard(board):
     for line in board:
         print(line)
 
+# Data Structure Position
 class Position:
     def __init__(self, x_pos = 0, y_pos = 0):
         self.x = x_pos
