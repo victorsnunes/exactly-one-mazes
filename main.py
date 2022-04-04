@@ -1,19 +1,24 @@
-from enum import Enum
+from util import Operation
+from screen import Screen 
 import pygame
 
 testBoard = [
     [5, 5, 5, 7, 7, 0],
-    [0, 4, 5, 7, 6, 0],
-    [0, 4, 0, 7, 6, 8],
-    [0, 4, 4, 6, 6, 8],
-    [0, 3, 3, 3, 8, 8],
-    [1, 0, 0, 3, 0, 0],
+    [0, 3, 5, 7, 6, 0],
+    [0, 3, 0, 7, 6, 8],
+    [0, 3, 3, 6, 6, 8],
+    [0, 4, 4, 4, 8, 8],
+    [1, 0, 0, 4, 0, 0],
 ]
 
 def main():
+    
+    screen = Screen()
+    screen.set_up(testBoard)
 
-    pygame.init()
-    #window = pygame.display.set_mode(300, 300)
+    """   
+    print("Input: ")
+    game_mode = int(input())
 
     print("Welcome to the Only One Mazes puzzle!\n\n")
 
@@ -26,9 +31,10 @@ def main():
     game_mode = int(input())
     
     if (game_mode == 1):
-        humanPlay(testBoard)
     elif (game_mode == 2):
-        pass
+        pass 
+    """
+    humanPlay(testBoard, screen)
 
     pygame.quit()
     print("quitting...")
@@ -38,13 +44,15 @@ def getKeyPress():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 return Operation.MOVE_LEFT
-            if event.key == pygame.K_UP:
+            elif event.key == pygame.K_UP:
                 return Operation.MOVE_UP
-            if event.key == pygame.K_RIGHT:
+            elif event.key == pygame.K_RIGHT:
                 return Operation.MOVE_RIGHT
-            if event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN:
                 return Operation.MOVE_DOWN
-
+        elif event.type == pygame.QUIT:
+            return Operation.QUIT
+    
 def printBoard(board):
     for line in board:
         print(line)
@@ -53,14 +61,22 @@ class Position:
     def __init__(self, x_pos = 0, y_pos = 0):
         self.x = x_pos
         self.y = y_pos
+
+class LShapedFigure:
+
+    def __init__(self, num):
+        self.value = num
+        self.visited = False
     
+    def visit(self):
+        self.visited = True
 
-class Operation(Enum):
-    MOVE_UP = "up"
-    MOVE_RIGHT = "right"
-    MOVE_DOWN = "down"
-    MOVE_LEFT = "left"
+    def __eq__(self, other):
+        return (isinstance(other, self.__class__) and
+            getattr(other, 'value', None) == self.value)
 
+    def __hash__(self):
+        return hash(str(self.value))
 
 def LnotVisited(element, l_figures):
     return element == 0 or element in l_figures
@@ -88,7 +104,6 @@ def possibleOperations(board, position, l_figures):
 
 def makeMove(board, position, op, l_figures):
     board[position.x][position.y] = 2
-    #TODO: Add the l in the visited list
     if op == Operation.MOVE_RIGHT:
         position.y += 1
     if op == Operation.MOVE_DOWN:
@@ -107,7 +122,7 @@ def gameOver(board):
     n = len(board)
     return board[0][len(board) - 1] == 1
 
-def humanPlay(board):
+def humanPlay(board, screen):
 
     #Scan the board and stores all its L shaped figures
     l_figures = set()
@@ -119,49 +134,18 @@ def humanPlay(board):
     position = Position(len(board) - 1 ,0)
 
     while True:
-        printBoard(board)
-        possibleOps = possibleOperations(board, position, l_figures)
-
-        if (possibleOps == []):
-            print("No more legal moves to make, you lost :(")
-            print("Better luck next time")
-
-        print("\nPossible moves: ")
-        for op in possibleOps:
-            print(op)
-
-        print("\n\n")
-
-        while True:
-
-            ans = input()
-
-            if (ans == "up"):
-                chosen_move = Operation.MOVE_UP
-
-            if (ans == "right"):
-                chosen_move = Operation.MOVE_RIGHT
-
-            if (ans == "down"):
-                chosen_move = Operation.MOVE_DOWN
-
-            if (ans == "left"):
-                chosen_move = Operation.MOVE_LEFT
-
-
-            if (chosen_move in possibleOps):
-                break
-
-        makeMove(board, position, chosen_move, l_figures) 
-
-        '''
-        move = getKeyPress()
         
+        possibleOps = possibleOperations(board, position, l_figures)
+        screen.draw_board(board, possibleOps)
+        move = getKeyPress()
+
         if move in possibleOps:
             makeMove(board, position, move, l_figures)
-        '''
+            printBoard(board)
+            print("\n")
+            print(possibleOps) 
 
-        if gameOver(board):
+        if gameOver(board) or move == Operation.QUIT:
             break
 
 if __name__ == "__main__":
