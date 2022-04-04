@@ -23,7 +23,6 @@ class Screen:
     def set_up(self, board):
         pygame.init()
         self.screen = pygame.display.set_mode((self.window_height, self.window_width))
-        self.screen.fill(self.WHITE)
         self.build_color_dict()
         self.draw_board(board)
         
@@ -34,22 +33,18 @@ class Screen:
         wx = 0
         wy = 0
         select_pos = []
+        
         for y in range(0, board_size):
             wy = 0
             for x in range(0, board_size):
                 rect = pygame.Rect(wx, wy, step, step)
-                     
+                if board[x][y] == 0:
+                    pygame.draw.rect(self.screen, self.WHITE, rect, 0)
+
                 if board[x][y] >= 3:
                     pygame.draw.rect(self.screen, self.l_color[board[x][y]], rect, 0)
+                pygame.draw.rect(self.screen, self.BLACK, rect, 1)
                 
-                if board[x][y] == 1:
-                    pygame.draw.circle(self.screen, self.RED, ((wx + step/2), (wy + step/2)), 10)
-                    for op in possible_ops:
-                        if op == Operation.MOVE_UP:
-                            rect = pygame.Rect(wx, wy - step, step, step)
-                        elif op == Operation.MOVE_RIGHT:
-                            rect = pygame.Rect(wx + step, wy, step, step)
-                        pygame.draw.rect(self.screen, self.YELLOW, rect, 6)
                 
                 wy += step
             wx += step
@@ -60,7 +55,21 @@ class Screen:
             wx = 0
             for y in range(0, board_size):
                 rect = pygame.Rect(wx, wy, step, step)
-                pygame.draw.rect(self.screen, self.BLACK, rect, 1)
+
+                if board[x][y] == 1:
+                    pygame.draw.circle(self.screen, self.RED, ((wx + step/2), (wy + step/2)), 10)
+                    for op in possible_ops:
+                        if op == Operation.MOVE_UP:
+                            rect = pygame.Rect(wx, wy - step, step, step)
+                        elif op == Operation.MOVE_RIGHT:
+                            rect = pygame.Rect(wx + step, wy, step, step)
+                        elif op == Operation.MOVE_LEFT:
+                            rect = pygame.Rect(wx - step, wy, step, step)
+                        elif op == Operation.MOVE_DOWN:
+                            rect = pygame.Rect(wx, wy + step, step, step)
+                        pygame.draw.rect(self.screen, self.YELLOW, rect, 6)
+                if board[x][y] == 2:
+                    pygame.draw.circle(self.screen, self.RED, ((wx + step/2), (wy + step/2)), 10)
                 
                 wx += step
             wy += step

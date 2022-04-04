@@ -78,46 +78,49 @@ class LShapedFigure:
     def __hash__(self):
         return hash(str(self.value))
 
-def Lvisited(board, x, y):
-    return False
+def LnotVisited(element, l_figures):
+    return element == 0 or element in l_figures
 
-def possibleOperations(board, position):
+def possibleOperations(board, position, l_figures):
     operations = []
 
     #Check if it's possible to move up
-    if position.y + 1 < len(board) and (board[position.x][position.y + 1] != 2) and not Lvisited(board, position.x, position.y + 1):
-        operations.append(Operation.MOVE_UP)
+    if position.y + 1 < len(board) and (board[position.x][position.y + 1] != 2) and LnotVisited(board[position.x][ position.y + 1], l_figures):
+        operations.append(Operation.MOVE_RIGHT)
 
     #Check if it's possible to move right
-    if position.x + 1 < len(board) and (board[position.x + 1][position.y] != 2) and not Lvisited(board, position.x + 1, position.y):
-        operations.append(Operation.MOVE_RIGHT)
+    if position.x + 1 < len(board) and (board[position.x + 1][position.y] != 2) and LnotVisited(board[position.x + 1][ position.y], l_figures):
+        operations.append(Operation.MOVE_DOWN)
     
     #Check if it's possible to move down
-    if position.y - 1 >= 0 and (board[position.x][position.y - 1] != 2) and not Lvisited(board, position.x, position.y - 1):
-        operations.append(Operation.MOVE_DOWN)
+    if position.y - 1 >= 0 and (board[position.x][position.y - 1] != 2) and LnotVisited(board[position.x][ position.y - 1], l_figures):
+        operations.append(Operation.MOVE_LEFT)
 
     #Check if it's possible to move left
-    if position.x - 1 >= 0 and (board[position.x - 1][position.y] != 2) and not Lvisited(board, position.x - 1, position.y):
-        operations.append(Operation.MOVE_LEFT)
+    if position.x - 1 >= 0 and (board[position.x - 1][position.y] != 2) and LnotVisited(board[position.x - 1][ position.y], l_figures):
+        operations.append(Operation.MOVE_UP)
 
     return operations
 
-def operation(board, position, op):
+def makeMove(board, position, op, l_figures):
     board[position.x][position.y] = 2
-    #TODO: Add the l in the visited list
-    if op == Operation.MOVE_UP:
+    if op == Operation.MOVE_RIGHT:
         position.y += 1
-    if op == Operation.MOVE_LEFT:
+    if op == Operation.MOVE_DOWN:
         position.x += 1
-    if op == Operation.MOVE_DOWN:
+    if op == Operation.MOVE_LEFT:
         position.y -= 1
-    if op == Operation.MOVE_DOWN:
+    if op == Operation.MOVE_UP:
         position.x -= 1
+
+    element = board[position.x][position.y]
+    if (element in l_figures):
+        l_figures.remove(element)
     board[position.x][position.y] = 1
 
 def gameOver(board):
     n = len(board)
-    return board[n - 1][n - 1] == 1
+    return board[0][len(board) - 1] == 1
 
 def humanPlay(board, screen):
 
@@ -126,36 +129,22 @@ def humanPlay(board, screen):
     for row in board:
         for element in row:
             if element >= 3:
-                l_figures.add(LShapedFigure(element))
+                l_figures.add(element)
 
-    position = Position()
+    position = Position(len(board) - 1 ,0)
 
     while True:
-        possibleOps = possibleOperations(board, position)
-
-        # Test
-        possibleOps = [Operation.MOVE_RIGHT, Operation.MOVE_UP]
+        
+        possibleOps = possibleOperations(board, position, l_figures)
         screen.draw_board(board, possibleOps)
-        
-        # print("Choose your move:\n")
-        # print("1. Move up\n")
-        # print("2. Move right\n")
-        # print("3. Move down\n")
-        # print("4. Move left\n\n")
-
-        # print("Possible moves: ")
-        # for op in possibleOps:
-        #     print(op + " ")
-        # print("\n\n")
-
-        # input = int(input)
-        
         move = getKeyPress()
-        
+
         if move in possibleOps:
-            #TODO: Not working, not sure why
-            operation(board, position, move)
-        
+            makeMove(board, position, move, l_figures)
+            printBoard(board)
+            print("\n")
+            print(possibleOps) 
+
         if gameOver(board) or move == Operation.QUIT:
             break
 
