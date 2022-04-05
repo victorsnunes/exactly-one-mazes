@@ -12,7 +12,7 @@ testBoard = [
 ]
 
 def main():
-    
+        
     screen = Screen()
     
     running = True
@@ -28,10 +28,11 @@ def main():
         ]
         screen.set_up(testBoard)
         running = humanPlay(testBoard, screen)
-
+        
     pygame.quit()
     print("quitting...")
 
+# Input Handler
 def getKeyPress():
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -52,6 +53,7 @@ def printBoard(board):
     for line in board:
         print(line)
 
+# Data Structure Position
 class Position:
     def __init__(self, x_pos = 0, y_pos = 0):
         self.x = x_pos
