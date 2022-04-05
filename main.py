@@ -14,27 +14,20 @@ testBoard = [
 def main():
     
     screen = Screen()
-    screen.set_up(testBoard)
-
-    """   
-    print("Input: ")
-    game_mode = int(input())
-
-    print("Welcome to the Only One Mazes puzzle!\n\n")
-
     
-    print("Choose the game mode:\n")
-    print("1. Human Mode\n")
-    print("2. Computer Solve\n\n")
-    
-    print("Input: ")
-    game_mode = int(input())
-    
-    if (game_mode == 1):
-    elif (game_mode == 2):
-        pass 
-    """
-    humanPlay(testBoard, screen)
+    running = True
+    while running:
+        print("Restarting...")
+        testBoard = [
+            [5, 5, 5, 7, 7, 0],
+            [0, 3, 5, 7, 6, 0],
+            [0, 3, 0, 7, 6, 8],
+            [0, 3, 3, 6, 6, 8],
+            [0, 4, 4, 4, 8, 8],
+            [1, 0, 0, 4, 0, 0],
+        ]
+        screen.set_up(testBoard)
+        running = humanPlay(testBoard, screen)
 
     pygame.quit()
     print("quitting...")
@@ -50,6 +43,8 @@ def getKeyPress():
                 return Operation.MOVE_RIGHT
             elif event.key == pygame.K_DOWN:
                 return Operation.MOVE_DOWN
+            elif event.key == pygame.K_r:
+                return Operation.RESTART 
         elif event.type == pygame.QUIT:
             return Operation.QUIT
     
@@ -145,8 +140,11 @@ def humanPlay(board, screen):
             print("\n")
             print(possibleOps) 
 
+        if move == Operation.RESTART:
+            return True
+
         if gameOver(board) or move == Operation.QUIT:
-            break
+            return False
 
 if __name__ == "__main__":
    main()
