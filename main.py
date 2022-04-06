@@ -1,4 +1,4 @@
-from util import Operation
+from util import Operation, Square, Color
 from screen import Screen 
 import pygame
 
@@ -26,7 +26,6 @@ def main():
             [0, 4, 4, 4, 8, 8],
             [1, 0, 0, 4, 0, 0],
         ]
-        screen.set_up(testBoard)
         running = humanPlay(testBoard, screen)
         
     pygame.quit()
@@ -59,22 +58,6 @@ class Position:
         self.x = x_pos
         self.y = y_pos
 
-class LShapedFigure:
-
-    def __init__(self, num):
-        self.value = num
-        self.visited = False
-    
-    def visit(self):
-        self.visited = True
-
-    def __eq__(self, other):
-        return (isinstance(other, self.__class__) and
-            getattr(other, 'value', None) == self.value)
-
-    def __hash__(self):
-        return hash(str(self.value))
-
 def LnotVisited(element, l_figures):
     return element == 0 or element in l_figures
 
@@ -82,25 +65,25 @@ def possibleOperations(board, position, l_figures):
     operations = []
 
     #Check if it's possible to move up
-    if position.y + 1 < len(board) and (board[position.x][position.y + 1] != 2) and LnotVisited(board[position.x][ position.y + 1], l_figures):
+    if position.y + 1 < len(board) and (board[position.x][position.y + 1].value != 2) and LnotVisited(board[position.x][ position.y + 1].value, l_figures):
         operations.append(Operation.MOVE_RIGHT)
 
     #Check if it's possible to move right
-    if position.x + 1 < len(board) and (board[position.x + 1][position.y] != 2) and LnotVisited(board[position.x + 1][ position.y], l_figures):
+    if position.x + 1 < len(board) and (board[position.x + 1][position.y].value != 2) and LnotVisited(board[position.x + 1][ position.y].value, l_figures):
         operations.append(Operation.MOVE_DOWN)
     
     #Check if it's possible to move down
-    if position.y - 1 >= 0 and (board[position.x][position.y - 1] != 2) and LnotVisited(board[position.x][ position.y - 1], l_figures):
+    if position.y - 1 >= 0 and (board[position.x][position.y - 1].value != 2) and LnotVisited(board[position.x][ position.y - 1].value, l_figures):
         operations.append(Operation.MOVE_LEFT)
 
     #Check if it's possible to move left
-    if position.x - 1 >= 0 and (board[position.x - 1][position.y] != 2) and LnotVisited(board[position.x - 1][ position.y], l_figures):
+    if position.x - 1 >= 0 and (board[position.x - 1][position.y].value != 2) and LnotVisited(board[position.x - 1][ position.y].value, l_figures):
         operations.append(Operation.MOVE_UP)
 
     return operations
 
 def makeMove(board, position, op, l_figures):
-    board[position.x][position.y] = 2
+    board[position.x][position.y].value = 2
     if op == Operation.MOVE_RIGHT:
         position.y += 1
     if op == Operation.MOVE_DOWN:
@@ -110,23 +93,41 @@ def makeMove(board, position, op, l_figures):
     if op == Operation.MOVE_UP:
         position.x -= 1
 
-    element = board[position.x][position.y]
+    element = board[position.x][position.y].value
     if (element in l_figures):
         l_figures.remove(element)
-    board[position.x][position.y] = 1
+    board[position.x][position.y].value = 1
 
 def gameOver(board):
     n = len(board)
-    return board[0][len(board) - 1] == 1
+    return board[0][len(board) - 1].value == 1
+
+def boardSetUp(board, l_figures):
+
+    color_dict = {0: Color.WHITE.value}
+
+    for i in range(len(board)):
+        for j in range(len(board[0])):
+
+            element = board[i][j]
+
+            if (element not in l_figures) and (element >= 3):
+                l_figures.add(element)
+                color_index = (element - 3) % len(Color.L_colors.value)
+                color_dict[element] = Color.L_colors.value[color_index]
+
+            if (element != 1):
+                board[i][j] = Square(element, color_dict[element])
+            else:
+                board[i][j] = Square(1, Color.WHITE.value)
+            
 
 def humanPlay(board, screen):
 
     #Scan the board and stores all its L shaped figures
     l_figures = set()
-    for row in board:
-        for element in row:
-            if element >= 3:
-                l_figures.add(element)
+    boardSetUp(board, l_figures)
+    screen.set_up(board)
 
     position = Position(len(board) - 1 ,0)
 

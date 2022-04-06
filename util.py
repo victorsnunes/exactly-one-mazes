@@ -7,3 +7,22 @@ class Operation(Enum):
     MOVE_LEFT = 3
     RESTART = 4
     QUIT = 9
+
+class Color(Enum):
+    WHITE = (255, 255, 255)
+    YELLOW = (255, 255, 0)
+    RED = (255, 0, 0)
+    BLUE = (0, 0, 255)
+    GREEN = (0, 255, 0)
+    CYAN = (0, 255, 255)
+    MAGENTA = (255, 0, 255)
+    BLACK = (0, 0, 0)
+
+    L_colors = [BLUE, GREEN, CYAN, MAGENTA]
+
+class Square:
+    def __init__(self, value, color):
+        self.value = value
+        self.color = color
+        self.isPossibleMove = False
+        self.isVisited = False
