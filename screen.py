@@ -24,6 +24,7 @@ class Screen:
         pygame.init()
         self.screen = pygame.display.set_mode((self.window_height, self.window_width))
         self.build_color_dict()
+        self.screen.fill(self.WHITE)
         self.draw_board(board)
         
     def draw_board(self, board, possible_ops = []):
