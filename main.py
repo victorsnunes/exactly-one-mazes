@@ -1,5 +1,7 @@
 from util import Operation
 from screen import Screen 
+import time
+import random
 import pygame
 
 testBoard = [
@@ -27,7 +29,7 @@ def main():
             [1, 0, 0, 4, 0, 0],
         ]
         screen.set_up(testBoard)
-        running = humanPlay(testBoard, screen)
+        running = autoPlay(testBoard, screen)
         
     pygame.quit()
     print("quitting...")
@@ -147,6 +149,35 @@ def humanPlay(board, screen):
 
         if gameOver(board) or move == Operation.QUIT:
             return False
+
+def autoPlay(board, screen):
+    #Scan the board and stores all its L shaped figures
+    l_figures = set()
+    for row in board:
+        for element in row:
+            if element >= 3:
+                l_figures.add(element)
+    listOfOperators = list(Operation)
+    position = Position(len(board) - 1 ,0)
+    while True:
+         
+        possibleOps = possibleOperations(board, position, l_figures)
+        screen.draw_board(board, possibleOps)
+        move = random.choice(listOfOperators)
+        time.sleep(1)
+
+        if move in possibleOps:
+            makeMove(board, position, move, l_figures)
+            printBoard(board)
+            print("\n")
+            print(possibleOps) 
+
+        if move == Operation.RESTART:
+            return True
+
+        if gameOver(board) or move == Operation.QUIT:
+            return False
+    
 
 if __name__ == "__main__":
    main()
