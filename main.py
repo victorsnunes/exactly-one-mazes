@@ -163,7 +163,7 @@ def autoPlay(board, screen):
          
         possibleOps = possibleOperations(board, position, l_figures)
         screen.draw_board(board, possibleOps)
-        move = random.choice(listOfOperators)
+        move = random.choice(listOfOperators[:4])
         time.sleep(1)
 
         if move in possibleOps:
