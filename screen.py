@@ -3,7 +3,6 @@ from util import Operation, Color
 
 class Screen:
     def __init__(self) -> None:
-        # TODO: Add more colors to avoid colisions, or add numbers to each L shape
         self.window_height = 300
         self.window_width = 300
         self.screen = 0

@@ -9,6 +9,7 @@ class Operation(Enum):
     QUIT = 9
 
 class Color(Enum):
+    #TODO: Add more colors to avoid conflicts in the table
     WHITE = (255, 255, 255)
     YELLOW = (255, 255, 0)
     RED = (255, 0, 0)
