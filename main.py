@@ -1,3 +1,4 @@
+from traceback import print_tb
 from util import Operation, Square, Color
 from screen import Screen 
 import pygame
@@ -120,7 +121,7 @@ def boardSetUp(board, l_figures):
                 board[i][j] = Square(element, color_dict[element])
             else:
                 board[i][j] = Square(1, Color.WHITE.value)
-            
+
 
 def humanPlay(board, screen):
 
@@ -134,6 +135,9 @@ def humanPlay(board, screen):
     while True:
         
         possibleOps = possibleOperations(board, position, l_figures)
+        if (possibleOps == []):
+            print("No more possible moves. You lost!")
+            return False
         screen.draw_board(board, possibleOps)
         move = getKeyPress()
 
@@ -147,6 +151,10 @@ def humanPlay(board, screen):
             return True
 
         if gameOver(board) or move == Operation.QUIT:
+            if (l_figures == set()):
+                print("Congratulations! You won!")
+            else:
+                print("You did't pass through all the L figures. You lost!")
             return False
 
 if __name__ == "__main__":
