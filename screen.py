@@ -50,7 +50,7 @@ class Screen:
                         elif op == Operation.MOVE_DOWN:
                             rect = pygame.Rect(wx, wy + step, step, step)
                         pygame.draw.rect(self.screen, Color.YELLOW.value, rect, 6)
-                if board[x][y] == 2:
+                if board[x][y].value == 2:
                     pygame.draw.circle(self.screen, Color.RED.value, ((wx + step/2), (wy + step/2)), 10)
                 
                 wx += step

@@ -1,3 +1,6 @@
+from queue import Queue
+from time import sleep
+from copy import deepcopy
 from util import Operation, Square, Color
 from screen import Screen 
 import pygame
@@ -15,18 +18,36 @@ def main():
         
     screen = Screen()
     
-    running = True
-    while running:
-        print("Restarting...")
+    print("Select the mode")
+    print("1: normal Human mode")
+    print("2: Solve with breadth search")
+
+    selected = input()
+
+    if selected == "1":
+        running = True
+        while running:
+            print("Restarting...")
+            testBoard = [
+                [5, 5, 5, 7, 7, 0],
+                [0, 3, 5, 7, 6, 0],
+                [0, 3, 0, 7, 6, 8],
+                [0, 3, 3, 6, 6, 8],
+                [0, 4, 4, 4, 8, 8],
+                [1, 0, 0, 4, 0, 0], 
+            ]
+            running = humanPlay(testBoard, screen)
+
+    if selected == "2":
         testBoard = [
-            [5, 5, 5, 7, 7, 0],
-            [0, 3, 5, 7, 6, 0],
-            [0, 3, 0, 7, 6, 8],
-            [0, 3, 3, 6, 6, 8],
-            [0, 4, 4, 4, 8, 8],
-            [1, 0, 0, 4, 0, 0],
-        ]
-        running = humanPlay(testBoard, screen)
+                [5, 5, 5, 7, 7, 0],
+                [0, 3, 5, 7, 6, 0],
+                [0, 3, 0, 7, 6, 8],
+                [0, 3, 3, 6, 6, 8],
+                [0, 4, 4, 4, 8, 8],
+                [1, 0, 0, 4, 0, 0], 
+            ]
+        breadthSearch(testBoard, screen)
         
     pygame.quit()
     print("quitting...")
@@ -83,22 +104,31 @@ def possibleOperations(board, position, l_figures):
     return operations
 
 def makeMove(board, position, op, l_figures):
-    board[position.x][position.y].value = 2
+    newBoard = deepcopy(board)
+    newLfigures = deepcopy(l_figures)
+    newPosition = deepcopy(position)
+
+    newBoard[position.x][position.y].value = 2
     if op == Operation.MOVE_RIGHT:
-        position.y += 1
-    if op == Operation.MOVE_DOWN:
-        position.x += 1
-    if op == Operation.MOVE_LEFT:
-        position.y -= 1
-    if op == Operation.MOVE_UP:
-        position.x -= 1
+        newPosition.y += 1
+    elif op == Operation.MOVE_DOWN:
+        newPosition.x += 1
+    elif op == Operation.MOVE_LEFT:
+        newPosition.y -= 1
+    elif op == Operation.MOVE_UP:
+        newPosition.x -= 1
 
-    element = board[position.x][position.y].value
+    element = newBoard[newPosition.x][newPosition.y].value
     if (element in l_figures):
-        l_figures.remove(element)
-    board[position.x][position.y].value = 1
+        newLfigures.remove(element)
+    newBoard[newPosition.x][newPosition.y].value = 1
 
-def gameOver(board):
+    return (newBoard, newPosition, newLfigures)
+
+def gameOver(board, l_figures):
+    #TODO: not working, need to check if all l shapes was used
+    if len(l_figures) == 0:
+        return False
     n = len(board)
     return board[0][len(board) - 1].value == 1
 
@@ -138,7 +168,7 @@ def humanPlay(board, screen):
         move = getKeyPress()
 
         if move in possibleOps:
-            makeMove(board, position, move, l_figures)
+            board, position, l_figures = makeMove(board, position, move, l_figures)
             printBoard(board)
             print("\n")
             print(possibleOps) 
@@ -146,8 +176,40 @@ def humanPlay(board, screen):
         if move == Operation.RESTART:
             return True
 
-        if gameOver(board) or move == Operation.QUIT:
+        if gameOver(board, l_figures) or move == Operation.QUIT:
             return False
+
+def breadthSearch(board, screen):
+    
+    q = Queue()
+    l_figures = set()
+    boardSetUp(board, l_figures)
+    position = Position(len(board) -1, 0)
+    possibleOps = possibleOperations(board, position, l_figures)
+
+    screen.set_up(board)
+
+    newBoard = board
+    newLfigures = l_figures
+
+    for op in possibleOps:
+        state = makeMove(board, position, op, l_figures)
+        q.put(state)
+
+    while not gameOver(newBoard, newLfigures):
+        newBoard, newPosition, newLfigures = q.get()
+        possibleOps = possibleOperations(newBoard, newPosition, newLfigures)
+        screen.draw_board(newBoard, possibleOps)
+
+        for op in possibleOps:
+            state = makeMove(newBoard, newPosition, op, newLfigures)
+            q.put(state)
+
+        sleep(0.25)
+        
+    print(newBoard)
+
+    return True
 
 if __name__ == "__main__":
    main()
