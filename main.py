@@ -20,8 +20,9 @@ def main():
     
     print("Select the mode")
     print("1: Normal Human mode")
-    print("2: Solve with breadth search")
-    print("5: Solve with greedy search")
+    print("2: Solve with Breadth First Search")
+    print("5: Solve with Greedy Search")
+    print("6: Solve with A* Algorithm")
 
     selected = input()
 
@@ -44,6 +45,9 @@ def main():
 
     if selected == "5":
         greedySearch(testBoard, screen)
+
+    if selected == "6":
+        aStarAlgorithm(testBoard, screen)
 
         
     pygame.quit()
@@ -229,9 +233,6 @@ def greedySearch(board, screen):
     for op in possibleOps:
         state = makeMove(board, position, op, l_figures)
         heuristic = heuristic1(board, l_figures)
-        print(heuristic)
-        print(state)
-        print((heuristic, state))
         q.put((heuristic, state))
 
     while not gameOver(newBoard, newLfigures):
@@ -243,6 +244,42 @@ def greedySearch(board, screen):
             state = makeMove(newBoard, newPosition, op, newLfigures)
             heuristic = heuristic1(newBoard, newLfigures)
             q.put((heuristic, state))
+
+        sleep(0.25)
+
+    return True
+
+def aStarAlgorithm(board, screen):
+    q = PriorityQueue()
+    l_figures = set()
+    boardSetUp(board, l_figures)
+    position = Position(len(board) - 1, 0)
+    possibleOps = possibleOperations(board, position, l_figures)
+
+    screen.set_up(board)
+
+    newBoard = board
+    newLfigures = l_figures
+    cost = 0
+
+    for op in possibleOps:
+        state = makeMove(board, position, op, l_figures)
+        heuristic = heuristic1(board, l_figures)
+
+        q.put((heuristic + cost, state))
+
+    while not gameOver(newBoard, newLfigures):
+        heuristic, (newBoard, newPosition, newLfigures) = q.get()
+        possibleOps = possibleOperations(newBoard, newPosition, newLfigures)
+        screen.draw_board(newBoard, possibleOps)
+
+        # Each move increments one cost
+        cost += 1
+
+        for op in possibleOps:
+            state = makeMove(newBoard, newPosition, op, newLfigures)
+            heuristic = heuristic1(newBoard, newLfigures)
+            q.put((heuristic + cost, state))
 
         sleep(0.25)
 
