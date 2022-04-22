@@ -27,3 +27,6 @@ class Square:
         self.color = color
         self.isPossibleMove = False
         self.isVisited = False
+
+    def __lt__(self, other):
+        return False

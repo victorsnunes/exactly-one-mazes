@@ -1,26 +1,27 @@
-from queue import Queue
+from queue import Queue, PriorityQueue
 from time import sleep
 from copy import deepcopy
 from util import Operation, Square, Color
 from screen import Screen 
 import pygame
 
-testBoard = [
-    [5, 5, 5, 7, 7, 0],
-    [0, 3, 5, 7, 6, 0],
-    [0, 3, 0, 7, 6, 8],
-    [0, 3, 3, 6, 6, 8],
-    [0, 4, 4, 4, 8, 8],
-    [1, 0, 0, 4, 0, 0],
-]
-
 def main():
         
     screen = Screen()
+
+    testBoard = [
+        [5, 5, 5, 7, 7, 0],
+        [0, 3, 5, 7, 6, 0],
+        [0, 3, 0, 7, 6, 8],
+        [0, 3, 3, 6, 6, 8],
+        [0, 4, 4, 4, 8, 8],
+        [1, 0, 0, 4, 0, 0],
+    ]
     
     print("Select the mode")
-    print("1: normal Human mode")
+    print("1: Normal Human mode")
     print("2: Solve with breadth search")
+    print("5: Solve with greedy search")
 
     selected = input()
 
@@ -34,20 +35,16 @@ def main():
                 [0, 3, 0, 7, 6, 8],
                 [0, 3, 3, 6, 6, 8],
                 [0, 4, 4, 4, 8, 8],
-                [1, 0, 0, 4, 0, 0], 
+                [1, 0, 0, 4, 0, 0],
             ]
             running = humanPlay(testBoard, screen)
 
     if selected == "2":
-        testBoard = [
-                [5, 5, 5, 7, 7, 0],
-                [0, 3, 5, 7, 6, 0],
-                [0, 3, 0, 7, 6, 8],
-                [0, 3, 3, 6, 6, 8],
-                [0, 4, 4, 4, 8, 8],
-                [1, 0, 0, 4, 0, 0], 
-            ]
         breadthSearch(testBoard, screen)
+
+    if selected == "5":
+        greedySearch(testBoard, screen)
+
         
     pygame.quit()
     print("quitting...")
@@ -71,7 +68,9 @@ def getKeyPress():
     
 def printBoard(board):
     for line in board:
-        print(line)
+        for element in line:
+            print(element.value, end=" ")
+        print(" ")
 
 # Data Structure Position
 class Position:
@@ -158,7 +157,7 @@ def humanPlay(board, screen):
     boardSetUp(board, l_figures)
     screen.set_up(board)
 
-    position = Position(len(board) - 1 ,0)
+    position = Position(len(board) - 1, 0)
 
     while True:
         
@@ -186,7 +185,7 @@ def breadthSearch(board, screen):
     q = Queue()
     l_figures = set()
     boardSetUp(board, l_figures)
-    position = Position(len(board) -1, 0)
+    position = Position(len(board) - 1, 0)
     possibleOps = possibleOperations(board, position, l_figures)
 
     screen.set_up(board)
@@ -208,7 +207,44 @@ def breadthSearch(board, screen):
             q.put(state)
 
         sleep(0.25)
-        
+
+    return True
+
+def heuristic1(board, l_figures):
+    return len(l_figures)
+
+
+def greedySearch(board, screen):
+    q = PriorityQueue()
+    l_figures = set()
+    boardSetUp(board, l_figures)
+    position = Position(len(board) - 1, 0)
+    possibleOps = possibleOperations(board, position, l_figures)
+
+    screen.set_up(board)
+
+    newBoard = board
+    newLfigures = l_figures
+
+    for op in possibleOps:
+        state = makeMove(board, position, op, l_figures)
+        heuristic = heuristic1(board, l_figures)
+        print(heuristic)
+        print(state)
+        print((heuristic, state))
+        q.put((heuristic, state))
+
+    while not gameOver(newBoard, newLfigures):
+        heuristic, (newBoard, newPosition, newLfigures) = q.get()
+        possibleOps = possibleOperations(newBoard, newPosition, newLfigures)
+        screen.draw_board(newBoard, possibleOps)
+
+        for op in possibleOps:
+            state = makeMove(newBoard, newPosition, op, newLfigures)
+            heuristic = heuristic1(newBoard, newLfigures)
+            q.put((heuristic, state))
+
+        sleep(0.25)
 
     return True
 
