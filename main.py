@@ -1,4 +1,6 @@
+from pickle import NEWOBJ
 from queue import Queue
+from collections import deque
 from time import sleep
 from copy import deepcopy
 from util import Operation, Square, Color
@@ -19,9 +21,9 @@ def main():
     screen = Screen()
     
     print("Select the mode")
-    print("1: normal Human mode")
+    print("1: Normal Human mode")
     print("2: Solve with breadth search")
-
+    print("3: Solve with depth search")
     selected = input()
 
     if selected == "1":
@@ -48,7 +50,16 @@ def main():
                 [1, 0, 0, 4, 0, 0], 
             ]
         breadthSearch(testBoard, screen)
-        
+    if selected == "3":
+        testBoard = [
+                [5, 5, 5, 7, 7, 0],
+                [0, 3, 5, 7, 6, 0],
+                [0, 3, 0, 7, 6, 8],
+                [0, 3, 3, 6, 6, 8],
+                [0, 4, 4, 4, 8, 8],
+                [1, 0, 0, 4, 0, 0], 
+            ]
+        depthSearchSetUp(testBoard, screen)
     pygame.quit()
     print("quitting...")
 
@@ -209,8 +220,36 @@ def breadthSearch(board, screen):
 
         sleep(0.25)
         
+def depthSearchSetUp(board, screen):
 
-    return True
+    l_figures = set()
+    boardSetUp(board, l_figures)
+    position = Position(len(board) -1, 0)
+    possibleOps = possibleOperations(board, position, l_figures)
+
+    screen.set_up(board)
+
+    for op in possibleOps:
+        newBoard, newPosition, newLfigures = makeMove(board, position, op, l_figures)
+        ret = depthSearch(newBoard, newPosition, newLfigures, op, screen)
+        if ret:
+            return True
+
+def depthSearch(board, position, l_figures, operation, screen):
+    if gameOver(board, l_figures):
+        return True
+
+    sleep(0.25)
+           
+    possibleOps = possibleOperations(board, position, l_figures)
+    screen.draw_board(board, possibleOps)
+    for op in possibleOps:
+        newBoard, newPosition, newLfigures = makeMove(board, position, op, l_figures)
+        ret = depthSearch(newBoard, newPosition, newLfigures, op, screen)
+        if ret:
+            return True
+
+    return False
 
 if __name__ == "__main__":
    main()
