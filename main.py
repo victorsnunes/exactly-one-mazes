@@ -126,8 +126,7 @@ def makeMove(board, position, op, l_figures):
     return (newBoard, newPosition, newLfigures)
 
 def gameOver(board, l_figures):
-    #TODO: not working, need to check if all l shapes was used
-    if len(l_figures) == 0:
+    if l_figures == set():
         return False
     n = len(board)
     return board[0][len(board) - 1].value == 1
@@ -150,7 +149,7 @@ def boardSetUp(board, l_figures):
                 board[i][j] = Square(element, color_dict[element])
             else:
                 board[i][j] = Square(1, Color.WHITE.value)
-            
+
 
 def humanPlay(board, screen):
 
@@ -164,6 +163,9 @@ def humanPlay(board, screen):
     while True:
         
         possibleOps = possibleOperations(board, position, l_figures)
+        if (possibleOps == []):
+            print("No more possible moves. You lost!")
+            return False
         screen.draw_board(board, possibleOps)
         move = getKeyPress()
 
@@ -177,7 +179,7 @@ def humanPlay(board, screen):
             return True
 
         if gameOver(board, l_figures) or move == Operation.QUIT:
-            return False
+            return True
 
 def breadthSearch(board, screen):
     
@@ -207,7 +209,6 @@ def breadthSearch(board, screen):
 
         sleep(0.25)
         
-    print(newBoard)
 
     return True
 
