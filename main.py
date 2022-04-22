@@ -1,12 +1,11 @@
-from queue import Queue, PriorityQueue
-from time import sleep
 from copy import deepcopy
 from util import Operation, Square, Color
-from screen import Screen 
+from screen import Screen
 import pygame
+from queue import Queue, PriorityQueue
+from time import sleep
 
 def main():
-        
     screen = Screen()
 
     testBoard = [
@@ -21,37 +20,20 @@ def main():
     print("Select the mode")
     print("1: Normal Human mode")
     print("2: Solve with Breadth First Search")
-    print("3: Solve with depth search")
+    print("3: Solve with Depth First search")
+    print("4: Solve with Iterative Deepening")
     print("5: Solve with Greedy Search")
     print("6: Solve with A* Algorithm")
 
     selected = input()
 
     if selected == "1":
-        running = True
-        while running:
-            print("Restarting...")
-            testBoard = [
-                [5, 5, 5, 7, 7, 0],
-                [0, 3, 5, 7, 6, 0],
-                [0, 3, 0, 7, 6, 8],
-                [0, 3, 3, 6, 6, 8],
-                [0, 4, 4, 4, 8, 8],
-                [1, 0, 0, 4, 0, 0],
-            ]
-            running = humanPlay(testBoard, screen)
+        humanPlay(testBoard, screen)
 
     if selected == "2":
         breadthSearch(testBoard, screen)
+
     if selected == "3":
-        testBoard = [
-                [5, 5, 5, 7, 7, 0],
-                [0, 3, 5, 7, 6, 0],
-                [0, 3, 0, 7, 6, 8],
-                [0, 3, 3, 6, 6, 8],
-                [0, 4, 4, 4, 8, 8],
-                [1, 0, 0, 4, 0, 0], 
-            ]
         depthSearchSetUp(testBoard, screen)
 
     if selected == "5":
@@ -171,15 +153,19 @@ def humanPlay(board, screen):
     l_figures = set()
     boardSetUp(board, l_figures)
     screen.set_up(board)
-
     position = Position(len(board) - 1, 0)
 
+    initialBoard = board
+    initialPosition = position
+    initialLFigures = l_figures
+
     while True:
-        
         possibleOps = possibleOperations(board, position, l_figures)
         if (possibleOps == []):
-            print("No more possible moves. You lost!")
-            return False
+            print("No more possible moves. You lost! Try again...")
+            board = initialBoard
+            position = initialPosition
+            l_figures = initialLFigures
         screen.draw_board(board, possibleOps)
         move = getKeyPress()
 
@@ -190,13 +176,15 @@ def humanPlay(board, screen):
             print(possibleOps) 
 
         if move == Operation.RESTART:
-            return True
+            print("Restarting...")
+            board = initialBoard
+            position = initialPosition
+            l_figures = initialLFigures
 
         if gameOver(board, l_figures) or move == Operation.QUIT:
             return True
 
 def breadthSearch(board, screen):
-    
     q = Queue()
     l_figures = set()
     boardSetUp(board, l_figures)
@@ -222,12 +210,12 @@ def breadthSearch(board, screen):
             q.put(state)
 
         sleep(0.25)
-        
-def depthSearchSetUp(board, screen):
 
+
+def depthSearchSetUp(board, screen):
     l_figures = set()
     boardSetUp(board, l_figures)
-    position = Position(len(board) -1, 0)
+    position = Position(len(board) - 1, 0)
 
     possibleOps = possibleOperations(board, position, l_figures)
 
@@ -241,12 +229,13 @@ def depthSearchSetUp(board, screen):
 
     return True
 
+
 def depthSearch(board, position, l_figures, operation, screen):
     if gameOver(board, l_figures):
         return True
 
     sleep(0.25)
-           
+
     possibleOps = possibleOperations(board, position, l_figures)
     screen.draw_board(board, possibleOps)
     for op in possibleOps:
@@ -256,6 +245,7 @@ def depthSearch(board, position, l_figures, operation, screen):
             return True
 
     return False
+
 
 def heuristic1(board, l_figures):
     return len(l_figures)
@@ -291,6 +281,7 @@ def greedySearch(board, screen):
         sleep(0.25)
 
     return True
+
 
 def aStarAlgorithm(board, screen):
     q = PriorityQueue()
