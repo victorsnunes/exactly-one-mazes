@@ -1,5 +1,5 @@
 from copy import deepcopy
-from util import Operation, Square, Color
+from util import Operation, Board
 from screen import Screen
 import pygame
 from queue import Queue, PriorityQueue
@@ -8,7 +8,7 @@ from time import sleep
 def main():
     screen = Screen()
 
-    testBoard = [
+    board_with_numbers = [
         [5, 5, 5, 7, 7, 0],
         [0, 3, 5, 7, 6, 0],
         [0, 3, 0, 7, 6, 8],
@@ -16,6 +16,8 @@ def main():
         [0, 4, 4, 4, 8, 8],
         [1, 0, 0, 4, 0, 0],
     ]
+
+    board = Board(board_with_numbers)
     
     print("Select the mode")
     print("1: Normal Human mode")
@@ -28,20 +30,15 @@ def main():
     selected = input()
 
     if selected == "1":
-        humanPlay(testBoard, screen)
-
-    if selected == "2":
-        breadthSearch(testBoard, screen)
-
-    if selected == "3":
-        depthSearchSetUp(testBoard, screen)
-
-    if selected == "5":
-        greedySearch(testBoard, screen)
-
-    if selected == "6":
-        aStarAlgorithm(testBoard, screen)
-
+        humanPlay(board, screen)
+    elif selected == "2":
+        breadthSearch(board, screen)
+    elif selected == "3":
+        depthSearchSetUp(board, screen)
+    elif selected == "5":
+        greedySearch(board, screen)
+    elif selected == "6":
+        aStarAlgorithm(board, screen)
         
     pygame.quit()
     print("quitting...")
@@ -62,128 +59,79 @@ def getKeyPress():
                 return Operation.RESTART 
         elif event.type == pygame.QUIT:
             return Operation.QUIT
-    
-def printBoard(board):
-    for line in board:
-        for element in line:
-            print(element.value, end=" ")
-        print(" ")
 
-# Data Structure Position
-class Position:
-    def __init__(self, x_pos = 0, y_pos = 0):
-        self.x = x_pos
-        self.y = y_pos
 
-def LnotVisited(element, l_figures):
-    return element == 0 or element in l_figures
-
-def possibleOperations(board, position, l_figures):
+def possibleOperations(board):
     operations = []
 
-    #Check if it's possible to move up
-    if position.y + 1 < len(board) and (board[position.x][position.y + 1].value != 2) and LnotVisited(board[position.x][ position.y + 1].value, l_figures):
-        operations.append(Operation.MOVE_RIGHT)
+    # Check if it's possible to move up
+    if board.canMoveUp():
+        operations.append(Operation.MOVE_UP)
 
     #Check if it's possible to move right
-    if position.x + 1 < len(board) and (board[position.x + 1][position.y].value != 2) and LnotVisited(board[position.x + 1][ position.y].value, l_figures):
+    if board.canMoveRight():
+        operations.append(Operation.MOVE_RIGHT)
+
+    #Check if it's possible to move down
+    if board.canMoveDown():
         operations.append(Operation.MOVE_DOWN)
     
-    #Check if it's possible to move down
-    if position.y - 1 >= 0 and (board[position.x][position.y - 1].value != 2) and LnotVisited(board[position.x][ position.y - 1].value, l_figures):
-        operations.append(Operation.MOVE_LEFT)
-
     #Check if it's possible to move left
-    if position.x - 1 >= 0 and (board[position.x - 1][position.y].value != 2) and LnotVisited(board[position.x - 1][ position.y].value, l_figures):
-        operations.append(Operation.MOVE_UP)
+    if board.canMoveLeft():
+        operations.append(Operation.MOVE_LEFT)
 
     return operations
 
-def makeMove(board, position, op, l_figures):
+def makeMove(board, op):
     newBoard = deepcopy(board)
-    newLfigures = deepcopy(l_figures)
-    newPosition = deepcopy(position)
 
-    newBoard[position.x][position.y].value = 2
-    if op == Operation.MOVE_RIGHT:
-        newPosition.y += 1
+    newBoard.setCurrentSquareVisited()
+
+    if op == Operation.MOVE_UP:
+        newBoard.position.moveUp()
+    elif op == Operation.MOVE_RIGHT:
+        newBoard.position.moveRight()
     elif op == Operation.MOVE_DOWN:
-        newPosition.x += 1
+        newBoard.position.moveDown()
     elif op == Operation.MOVE_LEFT:
-        newPosition.y -= 1
-    elif op == Operation.MOVE_UP:
-        newPosition.x -= 1
+        newBoard.position.moveLeft()
 
-    element = newBoard[newPosition.x][newPosition.y].value
-    if (element in l_figures):
-        newLfigures.remove(element)
-    newBoard[newPosition.x][newPosition.y].value = 1
+    newBoard.setCurrentPositionAsCurrentSquare()
 
-    return (newBoard, newPosition, newLfigures)
+    return newBoard
 
-def gameOver(board, l_figures):
-    if l_figures == set():
-        return False
-    n = len(board)
-    return board[0][len(board) - 1].value == 1
-
-def boardSetUp(board, l_figures):
-
-    color_dict = {0: Color.WHITE.value}
-
-    for i in range(len(board)):
-        for j in range(len(board[0])):
-
-            element = board[i][j]
-
-            if (element not in l_figures) and (element >= 3):
-                l_figures.add(element)
-                color_index = (element - 3) % len(Color.L_colors.value)
-                color_dict[element] = Color.L_colors.value[color_index]
-
-            if (element != 1):
-                board[i][j] = Square(element, color_dict[element])
-            else:
-                board[i][j] = Square(1, Color.WHITE.value)
-
+def gameOver(board):
+    return (board.l_figures == set()) and board.isAtFinalSquare()
 
 def humanPlay(board, screen):
 
-    #Scan the board and stores all its L shaped figures
-    l_figures = set()
-    boardSetUp(board, l_figures)
-    screen.set_up(board)
-    position = Position(len(board) - 1, 0)
-
-    initialBoard = board
-    initialPosition = position
-    initialLFigures = l_figures
+    screen.set_up(board.matrix)
 
     while True:
-        possibleOps = possibleOperations(board, position, l_figures)
+        possibleOps = possibleOperations(board)
         if (possibleOps == []):
             print("No more possible moves. You lost! Try again...")
-            board = initialBoard
-            position = initialPosition
-            l_figures = initialLFigures
-        screen.draw_board(board, possibleOps)
+            board.restart()
+        screen.draw_board(board.matrix, possibleOps)
         move = getKeyPress()
 
         if move in possibleOps:
-            board, position, l_figures = makeMove(board, position, move, l_figures)
-            printBoard(board)
+            board = makeMove(board, move)
+            board.print()
             print("\n")
+            print(board.l_figures)
             print(possibleOps) 
 
         if move == Operation.RESTART:
-            print("Restarting...")
-            board = initialBoard
-            position = initialPosition
-            l_figures = initialLFigures
+            board.restart()
 
-        if gameOver(board, l_figures) or move == Operation.QUIT:
+        if gameOver(board):
+            print("Congratulations! You won!")
             return True
 
+        if move == Operation.QUIT:
+            return False
+'''
 def breadthSearch(board, screen):
     q = Queue()
     l_figures = set()
@@ -318,6 +266,7 @@ def aStarAlgorithm(board, screen):
         sleep(0.25)
 
     return True
+'''
 
 if __name__ == "__main__":
    main()
