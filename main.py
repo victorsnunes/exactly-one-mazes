@@ -18,6 +18,7 @@ def main():
     ]
 
     board = Board(board_with_numbers)
+    screen.set_up(board.matrix)
     
     print("Select the mode")
     print("1: Normal Human mode")
@@ -83,29 +84,27 @@ def possibleOperations(board):
     return operations
 
 def makeMove(board, op):
-    newBoard = deepcopy(board)
+    new_board = deepcopy(board)
 
-    newBoard.setCurrentSquareVisited()
+    new_board.setCurrentSquareVisited()
 
     if op == Operation.MOVE_UP:
-        newBoard.position.moveUp()
+        new_board.position.moveUp()
     elif op == Operation.MOVE_RIGHT:
-        newBoard.position.moveRight()
+        new_board.position.moveRight()
     elif op == Operation.MOVE_DOWN:
-        newBoard.position.moveDown()
+        new_board.position.moveDown()
     elif op == Operation.MOVE_LEFT:
-        newBoard.position.moveLeft()
+        new_board.position.moveLeft()
 
-    newBoard.setCurrentPositionAsCurrentSquare()
+    new_board.setCurrentPositionAsCurrentSquare()
 
-    return newBoard
+    return new_board
 
 def gameOver(board):
     return (board.l_figures == set()) and board.isAtFinalSquare()
 
 def humanPlay(board, screen):
-
-    screen.set_up(board.matrix)
 
     while True:
         possibleOps = possibleOperations(board)
@@ -131,34 +130,41 @@ def humanPlay(board, screen):
 
         if move == Operation.QUIT:
             return False
-'''
+
 def breadthSearch(board, screen):
+
     q = Queue()
-    l_figures = set()
-    boardSetUp(board, l_figures)
-    position = Position(len(board) - 1, 0)
-    possibleOps = possibleOperations(board, position, l_figures)
-
-    screen.set_up(board)
-
-    newBoard = board
-    newLfigures = l_figures
+    possibleOps = possibleOperations(board)
 
     for op in possibleOps:
-        state = makeMove(board, position, op, l_figures)
+        state = makeMove(board, op)
         q.put(state)
 
-    while not gameOver(newBoard, newLfigures):
-        newBoard, newPosition, newLfigures = q.get()
-        possibleOps = possibleOperations(newBoard, newPosition, newLfigures)
-        screen.draw_board(newBoard, possibleOps)
+    board = q.get()
+    while not gameOver(board):
+
+        possibleOps = possibleOperations(board)
+        screen.draw_board(board.matrix, possibleOps)
 
         for op in possibleOps:
-            state = makeMove(newBoard, newPosition, op, newLfigures)
+            state = makeMove(board, op)
             q.put(state)
 
-        sleep(0.25)
+        board.print()
+        print("L figures remaining to visit: ", board.l_figures)
+        if (possibleOps == []):
+            print("No more possible moves")
+        else:
+            print("Possible moves: ", possibleOps)
+        print("\n\n")
 
+        #sleep(0.5)
+
+        board = q.get()
+
+    print("Congratulations! You found a solution")
+    print("Your solution:")
+    board.print()
 
 def depthSearchSetUp(board, screen):
     l_figures = set()
@@ -195,78 +201,97 @@ def depthSearch(board, position, l_figures, operation, screen):
     return False
 
 
-def heuristic1(board, l_figures):
-    return len(l_figures)
+def heuristic1(board):
+    return len(board.l_figures)
 
 
 def greedySearch(board, screen):
     q = PriorityQueue()
-    l_figures = set()
-    boardSetUp(board, l_figures)
-    position = Position(len(board) - 1, 0)
-    possibleOps = possibleOperations(board, position, l_figures)
-
-    screen.set_up(board)
-
-    newBoard = board
-    newLfigures = l_figures
+    possibleOps = possibleOperations(board)
 
     for op in possibleOps:
-        state = makeMove(board, position, op, l_figures)
-        heuristic = heuristic1(board, l_figures)
+        state = makeMove(board, op)
+        heuristic = heuristic1(board)
         q.put((heuristic, state))
 
-    while not gameOver(newBoard, newLfigures):
-        heuristic, (newBoard, newPosition, newLfigures) = q.get()
-        possibleOps = possibleOperations(newBoard, newPosition, newLfigures)
-        screen.draw_board(newBoard, possibleOps)
+    heuristic, board = q.get()
+    while not gameOver(board):
+
+        possibleOps = possibleOperations(board)
+        screen.draw_board(board.matrix, possibleOps)
 
         for op in possibleOps:
-            state = makeMove(newBoard, newPosition, op, newLfigures)
-            heuristic = heuristic1(newBoard, newLfigures)
+            state = makeMove(board, op)
+            heuristic = heuristic1(board)
             q.put((heuristic, state))
 
-        sleep(0.25)
+        board.print()
+        print("L figures remaining to visit: ", board.l_figures)
+        if (possibleOps == []):
+            print("No more possible moves")
+        else:
+            print("Possible moves: ", possibleOps)
+        print("\n\n")
+
+        #sleep(0.25)
+
+        heuristic, board = q.get()
+
+    print("Congratulations! You found a solution")
+    print("Your solution:")
+    board.print()
 
     return True
 
 
 def aStarAlgorithm(board, screen):
     q = PriorityQueue()
-    l_figures = set()
-    boardSetUp(board, l_figures)
-    position = Position(len(board) - 1, 0)
-    possibleOps = possibleOperations(board, position, l_figures)
+    possibleOps = possibleOperations(board)
 
-    screen.set_up(board)
-
-    newBoard = board
-    newLfigures = l_figures
-    cost = 0
+    current_cost = 0
+    current_heuristic = 0
 
     for op in possibleOps:
-        state = makeMove(board, position, op, l_figures)
-        heuristic = heuristic1(board, l_figures)
+        state = makeMove(board, op)
+        heuristic = heuristic1(board)
+        q.put((heuristic, state))
 
-        q.put((heuristic + cost, state))
+    heuristicAndCost, board = q.get()
+    while not gameOver(board):
 
-    while not gameOver(newBoard, newLfigures):
-        heuristic, (newBoard, newPosition, newLfigures) = q.get()
-        possibleOps = possibleOperations(newBoard, newPosition, newLfigures)
-        screen.draw_board(newBoard, possibleOps)
-
-        # Each move increments one cost
-        cost += 1
+        possibleOps = possibleOperations(board)
+        screen.draw_board(board.matrix, possibleOps)
 
         for op in possibleOps:
-            state = makeMove(newBoard, newPosition, op, newLfigures)
-            heuristic = heuristic1(newBoard, newLfigures)
-            q.put((heuristic + cost, state))
+            state = makeMove(board, op)
+            heuristic = heuristic1(state)
+            # Each move increments one cost
+            q.put((heuristic + current_cost + 1, state))
 
-        sleep(0.25)
+        board.print()
+        print("L figures remaining to visit: ", board.l_figures)
+        if (possibleOps == []):
+            print("No more possible moves")
+        else:
+            print("Possible moves: ", possibleOps)
+        print("Heuristic: ", current_heuristic)
+        print("Cost: ", current_cost)
+        print("\n\n")
+
+        # sleep(0.25)
+
+        heuristicAndCost, board = q.get()
+        current_heuristic = heuristic1(board)
+        current_cost = heuristicAndCost - current_heuristic
+
+    print("Congratulations! You found a solution")
+    print("Your solution:")
+    board.print()
+    print("Heuristic: ", current_heuristic)
+    print("Cost: ", current_cost)
 
     return True
-'''
+
 
 if __name__ == "__main__":
    main()

@@ -61,9 +61,6 @@ class Square:
     def isVisited(self):
         return self.value == 2
 
-    def __lt__(self, other):
-
-        return False
 
 class Board:
     def __init__(self, board):
@@ -158,3 +155,6 @@ class Board:
             for element in line:
                 print(element.value, end=" ")
             print(" ")
+
+    def __lt__(self, other):
+        return False
