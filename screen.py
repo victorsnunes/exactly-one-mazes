@@ -1,5 +1,5 @@
 import pygame
-from util import Operation, Color
+from structures import Operation, Color
 
 class Screen:
     def __init__(self) -> None:

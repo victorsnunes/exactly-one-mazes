@@ -150,6 +150,10 @@ class Board:
 
         self.print()
 
+    #Finds out it the player won
+    def gameOver(self):
+        return (self.l_figures == set()) and self.isAtFinalSquare()
+
     def print(self):
         for line in self.matrix:
             for element in line:
