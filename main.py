@@ -2,6 +2,7 @@ from structures import Board
 from screen import Screen
 import pygame
 from search_algorithms import humanPlay, breadthSearch, depthSearch, greedySearch, aStarAlgorithm
+from utils import getKeyPress, Operation
 
 def main():
     screen = Screen()
@@ -39,6 +40,12 @@ def main():
     elif selected == "6":
         aStarAlgorithm(board, screen)
         
+    # Just to show the result in the end  
+    while True:
+        op = getKeyPress()
+        if(op == Operation.QUIT):
+            break
+    
     pygame.quit()
     print("quitting...")
 
