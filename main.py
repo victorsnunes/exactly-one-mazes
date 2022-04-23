@@ -35,7 +35,7 @@ def main():
     elif selected == "2":
         breadthSearch(board, screen)
     elif selected == "3":
-        depthSearchSetUp(board, screen)
+        depthSearch(board, screen)
     elif selected == "5":
         greedySearch(board, screen)
     elif selected == "6":
@@ -166,35 +166,29 @@ def breadthSearch(board, screen):
     print("Your solution:")
     board.print()
 
-def depthSearchSetUp(board, screen):
-    l_figures = set()
-    boardSetUp(board, l_figures)
-    position = Position(len(board) - 1, 0)
-
-    possibleOps = possibleOperations(board, position, l_figures)
-
-    screen.set_up(board)
-
-    for op in possibleOps:
-        newBoard, newPosition, newLfigures = makeMove(board, position, op, l_figures)
-        ret = depthSearch(newBoard, newPosition, newLfigures, op, screen)
-        if ret:
-            break
-
-    return True
-
-
-def depthSearch(board, position, l_figures, operation, screen):
-    if gameOver(board, l_figures):
+def depthSearch(board, screen):
+    if gameOver(board):
+        print("Congratulations! You found a solution")
+        print("Your solution:")
+        board.print()
         return True
 
-    sleep(0.25)
+    #sleep(0.25)
 
-    possibleOps = possibleOperations(board, position, l_figures)
-    screen.draw_board(board, possibleOps)
+    possibleOps = possibleOperations(board)
+    screen.draw_board(board.matrix, possibleOps)
+
+    board.print()
+    print("L figures remaining to visit: ", board.l_figures)
+    if (possibleOps == []):
+        print("No more possible moves")
+    else:
+        print("Possible moves: ", possibleOps)
+    print("\n\n")
+
     for op in possibleOps:
-        newBoard, newPosition, newLfigures = makeMove(board, position, op, l_figures)
-        ret = depthSearch(newBoard, newPosition, newLfigures, op, screen)
+        newBoard = makeMove(board, op)
+        ret = depthSearch(newBoard, screen)
         if ret:
             return True
 
