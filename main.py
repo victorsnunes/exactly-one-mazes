@@ -1,7 +1,7 @@
 from structures import Board
 from screen import Screen
 import pygame
-from search_algorithms import humanPlay, breadthSearch, depthSearch, iterativeDeepening, greedySearch, aStarAlgorithm
+from search_algorithms import humanPlay, breadthSearch, depthSearch, iterativeDeepening, greedySearch, aStarAlgorithm, process_time
 from utils import getKeyPress, Operation
 
 def main():
@@ -34,7 +34,8 @@ def main():
     elif selected == "2":
         breadthSearch(board, screen)
     elif selected == "3":
-        depthSearch(board, screen)
+        startTime = process_time()
+        depthSearch(board, screen, 0.0, startTime)
     elif selected == "4":
         iterativeDeepening(board, screen)
     elif selected == "5":
