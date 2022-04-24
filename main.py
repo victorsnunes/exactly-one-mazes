@@ -1,7 +1,7 @@
 from structures import Board
 from screen import Screen
 import pygame
-from search_algorithms import humanPlay, breadthSearch, depthSearch, greedySearch, aStarAlgorithm
+from search_algorithms import humanPlay, breadthSearch, depthSearch, iterativeDeepening, greedySearch, aStarAlgorithm
 from utils import getKeyPress, Operation
 
 def main():

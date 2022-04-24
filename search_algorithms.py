@@ -79,7 +79,6 @@ def depthSearch(board, screen):
 
     #sleep(0.25)
 
-
     board.print()
     print("L figures remaining to visit: ", board.l_figures)
     if (possibleOps == []):
@@ -97,6 +96,49 @@ def depthSearch(board, screen):
     return False
 
 def iterativeDeepening(board, screen):
+    depth = 0
+    while True:
+        found, remaining = depthLimitedSearch(board, depth, screen)
+        if found is not None:
+            print("Congratulations! You found a solution")
+            print("Your solution:")
+            found.print()
+            return True
+        elif not remaining:
+            return False
+        depth += 1
+
+def depthLimitedSearch(board, depth, screen):
+    possibleOps = possibleOperations(board)
+    screen.draw_board(board.matrix, possibleOps)
+
+    if depth == 0:
+        if board.gameOver():
+            return (board, True)
+        else:
+            #Not found, but maybe have children
+            return (None, True)
+    elif depth > 0:
+        any_remaining = False
+
+        board.print()
+        print("L figures remaining to visit: ", board.l_figures)
+        if (possibleOps == []):
+            print("No more possible moves")
+        else:
+            print("Possible moves: ", possibleOps)
+        print("\n\n")
+
+        for op in possibleOps:
+            newBoard = makeMove(board, op)
+            found, remaining = depthLimitedSearch(newBoard, depth - 1, screen)
+            if found is not None:
+                return (found, True)
+            if remaining:
+                #At least one node found at depth, let the algorithm deepen
+                any_remaining = True
+        return (None, any_remaining)
+
 
 def heuristic1(board):
     return len(board.l_figures)
