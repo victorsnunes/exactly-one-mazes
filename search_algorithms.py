@@ -63,18 +63,22 @@ def breadthSearch(board, screen):
     print("Congratulations! You found a solution")
     print("Your solution:")
     board.print()
+    screen.draw_board(board.matrix, possibleOps)
+
 
 def depthSearch(board, screen):
+    possibleOps = possibleOperations(board)
+    screen.draw_board(board.matrix, possibleOps)
+    
     if board.gameOver():
         print("Congratulations! You found a solution")
         print("Your solution:")
         board.print()
+
         return True
 
     #sleep(0.25)
 
-    possibleOps = possibleOperations(board)
-    screen.draw_board(board.matrix, possibleOps)
 
     board.print()
     print("L figures remaining to visit: ", board.l_figures)
@@ -133,6 +137,7 @@ def greedySearch(board, screen):
     print("Congratulations! You found a solution")
     print("Your solution:")
     board.print()
+    screen.draw_board(board.matrix, possibleOps)
 
     return True
 
@@ -180,6 +185,7 @@ def aStarAlgorithm(board, screen):
     print("Congratulations! You found a solution")
     print("Your solution:")
     board.print()
+    screen.draw_board(board.matrix, possibleOps)
     print("Heuristic: ", current_heuristic)
     print("Cost: ", current_cost)
 
