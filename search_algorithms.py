@@ -1,6 +1,7 @@
 from utils import *
 from queue import Queue, PriorityQueue
 from time import sleep, process_time
+import psutil
 
 def humanPlay(board, screen):
 
@@ -70,6 +71,7 @@ def breadthSearch(board, screen):
     screen.draw_board(board.matrix, possibleOps)
     print("Interactions: ", interaction)
     print("Elapsed time: %6.4f" % endTime, "seconds")
+    print('RAM memory % used:', psutil.virtual_memory()[2])
 
 
 def depthSearch(board, screen,interaction, time):
@@ -100,6 +102,7 @@ def depthSearch(board, screen,interaction, time):
         print("Your solution:")
         print("Interactions: ", interaction)
         print("Elapsed time: %6.4f" % endTime, "seconds")
+        print('RAM memory % used:', psutil.virtual_memory()[2])
         board.print()
 
         return True
@@ -118,6 +121,7 @@ def iterativeDeepening(board, screen):
             print("Your solution:")
             print("Interactions: ", interaction)
             print("Elapsed time: %6.4f" % endTime, "seconds")
+            print('RAM memory % used:', psutil.virtual_memory()[2])
             found.print()
             return True
         elif not remaining:
@@ -204,6 +208,7 @@ def greedySearch(board, screen):
     screen.draw_board(board.matrix, possibleOps)
     print("Interactions: ", interaction)
     print("Elapsed time: %6.4f" % endTime, "seconds")
+    print('RAM memory % used:', psutil.virtual_memory()[2])
 
     return True
 
@@ -260,5 +265,6 @@ def aStarAlgorithm(board, screen):
     print("Cost: ", current_cost)
     print("Interactions: ", interaction)
     print("Elapsed time: %6.4f" % endTime, "seconds")
+    print('RAM memory % used:', psutil.virtual_memory()[2])
 
     return True
