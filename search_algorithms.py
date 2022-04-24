@@ -117,6 +117,7 @@ def iterativeDeepening(board, screen):
             print("Congratulations! You found a solution")
             print("Your solution:")
             print("Interactions: ", interaction)
+            print("Elapsed time: %6.4f" % endTime, "seconds")
             found.print()
             return True
         elif not remaining:
@@ -147,10 +148,11 @@ def depthLimitedSearch(board, depth, screen, interaction):
         for op in possibleOps:
             newBoard = makeMove(board, op)
             interaction += 1
-            found, remaining = depthLimitedSearch(newBoard, depth - 1, screen, interaction)
+            found, remaining = depthLimitedSearch(newBoard, depth - 1, screen, interaction+1)
             if found is not None:
                 return (found, True)
             if remaining:
+                interaction+=1
                 #At least one node found at depth, let the algorithm deepen
                 any_remaining = True
         return (None, any_remaining)
