@@ -92,6 +92,7 @@ def depthSearch(board, screen):
 
     return False
 
+def iterativeDeepening(board, screen):
 
 def heuristic1(board):
     return len(board.l_figures)

@@ -34,6 +34,8 @@ def main():
         breadthSearch(board, screen)
     elif selected == "3":
         depthSearch(board, screen)
+    elif selected == "4":
+        iterativeDeepening(board, screen)
     elif selected == "5":
         greedySearch(board, screen)
     elif selected == "6":
