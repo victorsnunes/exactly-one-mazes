@@ -31,6 +31,7 @@ def humanPlay(board, screen):
             return False
 
 def breadthSearch(board, screen):
+    screen.set_up(board.matrix)
     interaction = 0
     q = Queue()
     possibleOps = possibleOperations(board)
@@ -75,6 +76,7 @@ def breadthSearch(board, screen):
 
 
 def depthSearch(board, screen,interaction, time):
+    screen.set_up(board.matrix)
     possibleOps = possibleOperations(board)
     screen.draw_board(board.matrix, possibleOps)
   
@@ -110,6 +112,7 @@ def depthSearch(board, screen,interaction, time):
     return False
 
 def iterativeDeepening(board, screen):
+    screen.set_up(board.matrix)
     depth = 0
     interaction = 0
     startTime = process_time()
@@ -167,6 +170,7 @@ def heuristic1(board):
 
 
 def greedySearch(board, screen):
+    screen.set_up(board.matrix)
     q = PriorityQueue()
     possibleOps = possibleOperations(board)
     interaction = 0
