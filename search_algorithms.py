@@ -3,6 +3,7 @@ from queue import Queue, PriorityQueue
 from time import sleep, process_time
 import psutil
 
+
 def humanPlay(board, screen):
     screen.set_up(board.matrix)
     while True:
@@ -29,6 +30,7 @@ def humanPlay(board, screen):
 
         if move == Operation.QUIT:
             return False
+
 
 def breadthSearch(board, screen):
     screen.set_up(board.matrix)
@@ -61,7 +63,7 @@ def breadthSearch(board, screen):
             print("Possible moves: ", possibleOps)
         print("\n\n")
 
-        #sleep(0.5)
+        # sleep(0.5)
 
         board = q.get()
     endTime = process_time() - startTime
@@ -74,13 +76,19 @@ def breadthSearch(board, screen):
     print("Elapsed time: %6.4f" % endTime, "seconds")
     print('RAM memory % used:', psutil.virtual_memory()[2])
 
+    measurements = open('measurements.txt', 'a')
+    measurements.write("BFS\nInteraction " + repr(interaction)+"\n")
+    measurements.write("Elapsed process time: %6.4f" % endTime + " seconds\n")
+    measurements.write("RAM memory" + repr(psutil.virtual_memory()[2])+"%\n")
+    measurements.close()
 
-def depthSearch(board, screen,interaction, time):
+
+def depthSearch(board, screen, interaction, time):
     screen.set_up(board.matrix)
     possibleOps = possibleOperations(board)
     screen.draw_board(board.matrix, possibleOps)
-  
-    #sleep(0.25)
+
+    # sleep(0.25)
 
     board.print()
     print("L figures remaining to visit: ", board.l_figures)
@@ -89,14 +97,13 @@ def depthSearch(board, screen,interaction, time):
     else:
         print("Possible moves: ", possibleOps)
     print("\n\n")
-    
+
     for op in possibleOps:
         newBoard = makeMove(board, op)
         interaction += 1
-        ret = depthSearch(newBoard, screen, interaction,time)
+        ret = depthSearch(newBoard, screen, interaction, time)
         if ret:
             return True
-    
 
     if board.gameOver():
         endTime = process_time() - time
@@ -105,11 +112,16 @@ def depthSearch(board, screen,interaction, time):
         print("Interactions: ", interaction)
         print("Elapsed time: %6.4f" % endTime, "seconds")
         print('RAM memory % used:', psutil.virtual_memory()[2])
+        measurements = open('measurements.txt', 'a')
+        measurements.write("DFS\nInteraction " + repr(interaction)+"\n")
+        measurements.write("Elapsed process time: %6.4f" % endTime + " seconds\n")
+        measurements.write("RAM memory" + repr(psutil.virtual_memory()[2])+"%\n")
+        measurements.close()
         board.print()
-
         return True
 
     return False
+
 
 def iterativeDeepening(board, screen):
     screen.set_up(board.matrix)
@@ -117,7 +129,8 @@ def iterativeDeepening(board, screen):
     interaction = 0
     startTime = process_time()
     while True:
-        found, remaining = depthLimitedSearch(board, depth, screen, interaction)
+        found, remaining = depthLimitedSearch(
+            board, depth, screen, interaction)
         if found is not None:
             endTime = process_time() - startTime
             print("Congratulations! You found a solution")
@@ -125,11 +138,17 @@ def iterativeDeepening(board, screen):
             print("Interactions: ", interaction)
             print("Elapsed time: %6.4f" % endTime, "seconds")
             print('RAM memory % used:', psutil.virtual_memory()[2])
+            measurements = open('measurements.txt', 'a')
+            measurements.write("Iterative deepening\nInteraction " + repr(interaction)+"\n")
+            measurements.write("Elapsed process time: %6.4f" % endTime + " seconds\n")
+            measurements.write("RAM memory" + repr(psutil.virtual_memory()[2])+"%\n")
+            measurements.close()
             found.print()
             return True
         elif not remaining:
             return False
         depth += 1
+
 
 def depthLimitedSearch(board, depth, screen, interaction):
     possibleOps = possibleOperations(board)
@@ -139,7 +158,7 @@ def depthLimitedSearch(board, depth, screen, interaction):
         if board.gameOver():
             return (board, True)
         else:
-            #Not found, but maybe have children
+            # Not found, but maybe have children
             return (None, True)
     elif depth > 0:
         any_remaining = False
@@ -155,12 +174,13 @@ def depthLimitedSearch(board, depth, screen, interaction):
         for op in possibleOps:
             newBoard = makeMove(board, op)
             interaction += 1
-            found, remaining = depthLimitedSearch(newBoard, depth - 1, screen, interaction+1)
+            found, remaining = depthLimitedSearch(
+                newBoard, depth - 1, screen, interaction+1)
             if found is not None:
                 return (found, True)
             if remaining:
-                interaction+=1
-                #At least one node found at depth, let the algorithm deepen
+                interaction += 1
+                # At least one node found at depth, let the algorithm deepen
                 any_remaining = True
         return (None, any_remaining)
 
@@ -201,7 +221,7 @@ def greedySearch(board, screen):
             print("Possible moves: ", possibleOps)
         print("\n\n")
 
-        #sleep(0.25)
+        # sleep(0.25)
 
         heuristic, board = q.get()
     endTime = process_time() - startTime
@@ -213,6 +233,11 @@ def greedySearch(board, screen):
     print("Interactions: ", interaction)
     print("Elapsed time: %6.4f" % endTime, "seconds")
     print('RAM memory % used:', psutil.virtual_memory()[2])
+    measurements = open('measurements.txt', 'a')
+    measurements.write("Greedy Search\nInteraction " + repr(interaction)+"\n")
+    measurements.write("Elapsed process time: %6.4f" % endTime + " seconds\n")
+    measurements.write("RAM memory" + repr(psutil.virtual_memory()[2])+"%\n")
+    measurements.close()
 
     return True
 
@@ -271,6 +296,10 @@ def aStarAlgorithm(board, screen):
     print("Interactions: ", interaction)
     print("Elapsed time: %6.4f" % endTime, "seconds")
     print('RAM memory % used:', psutil.virtual_memory()[2])
+    measurements = open('measurements.txt', 'a')
+    measurements.write("A* Search\nInteraction " + repr(interaction)+"\n")
+    measurements.write("Elapsed process time: %6.4f" % endTime + " seconds\n")
+    measurements.write("RAM memory" + repr(psutil.virtual_memory()[2])+"%\n")
+    measurements.close()
 
     return True
-    

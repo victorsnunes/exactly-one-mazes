@@ -1,0 +1,20 @@
+BFS
+Interaction 123
+Elapsed process time: 0.2206 seconds
+RAM memory43.2%
+Iterative deepening
+Interaction 0
+Elapsed process time: 1.5687 seconds
+RAM memory43.1%
+Greedy Search
+Interaction 47
+Elapsed process time: 0.0928 seconds
+RAM memory43.1%
+A* Search
+Interaction 121
+Elapsed process time: 0.2248 seconds
+RAM memory43.1%
+DFS
+Interaction 19
+Elapsed process time: 0.9962 seconds
+RAM memory43.5%
