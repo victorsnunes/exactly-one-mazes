@@ -48,14 +48,6 @@ def main():
     # elif selected == "6":
     #     aStarAlgorithm(board, screen)
 
-
-        
-    # Just to show the result in the end  
-    while True:
-        op = getKeyPress()
-        if(op == Operation.QUIT):
-            break
-    
     pygame.quit()
     print("quitting...")
 

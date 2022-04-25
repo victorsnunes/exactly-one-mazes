@@ -10,7 +10,6 @@ class Operation(Enum):
     QUIT = 9
 
 class Color(Enum):
-    #TODO: Add more colors to avoid conflicts in the table
     WHITE = (255, 255, 255)
     YELLOW = (255, 255, 0)
     RED = (255, 0, 0)
@@ -20,6 +19,7 @@ class Color(Enum):
     MAGENTA = (255, 0, 255)
     BLACK = (0, 0, 0)
 
+    #TODO: Add more colors to avoid conflicts in the table
     L_colors = [BLUE, GREEN, CYAN, MAGENTA]
 
 

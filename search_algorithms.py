@@ -82,6 +82,10 @@ def breadthSearch(board, screen):
     measurements.write("RAM memory" + repr(psutil.virtual_memory()[2])+"%\n")
     measurements.close()
 
+    #Wait a little to show the final answer
+    while getKeyPress() == False:
+        continue
+
 
 def depthSearch(board, screen, interaction, time):
     screen.set_up(board.matrix)
@@ -118,6 +122,11 @@ def depthSearch(board, screen, interaction, time):
         measurements.write("RAM memory" + repr(psutil.virtual_memory()[2])+"%\n")
         measurements.close()
         board.print()
+
+        #Wait a little to show the final answer
+        while getKeyPress() == False:
+            continue
+
         return True
 
     return False
@@ -144,7 +153,13 @@ def iterativeDeepening(board, screen):
             measurements.write("RAM memory" + repr(psutil.virtual_memory()[2])+"%\n")
             measurements.close()
             found.print()
+
+            #Wait a little to show the final answer
+            while getKeyPress() == False:
+                continue
+
             return True
+
         elif not remaining:
             return False
         depth += 1
@@ -239,6 +254,10 @@ def greedySearch(board, screen):
     measurements.write("RAM memory" + repr(psutil.virtual_memory()[2])+"%\n")
     measurements.close()
 
+    #Wait a little to show the final answer
+    while getKeyPress() == False:
+        continue
+
     return True
 
 
@@ -301,5 +320,9 @@ def aStarAlgorithm(board, screen):
     measurements.write("Elapsed process time: %6.4f" % endTime + " seconds\n")
     measurements.write("RAM memory" + repr(psutil.virtual_memory()[2])+"%\n")
     measurements.close()
+
+    #Show the final answer until a keypress
+    while getKeyPress() == False:
+        continue
 
     return True

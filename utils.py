@@ -16,8 +16,11 @@ def getKeyPress():
                 return Operation.MOVE_DOWN
             elif event.key == pygame.K_r:
                 return Operation.RESTART
+            else:
+                return True
         elif event.type == pygame.QUIT:
             return Operation.QUIT
+    return False
 
 def possibleOperations(board):
     operations = []
