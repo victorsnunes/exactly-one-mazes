@@ -4,7 +4,7 @@ from structures import Operation, Color
 class Screen:
     def __init__(self) -> None:
         self.window_height = 600
-        self.window_width = 400
+        self.window_width = 600
         self.screen = 0
 
     def set_up(self, board):

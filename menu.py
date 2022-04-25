@@ -5,10 +5,10 @@ from search_algorithms import humanPlay, breadthSearch, depthSearch, iterativeDe
 from time import sleep, process_time
 from utils import getKeyPress, Operation
 
-surface = create_example_window('Exactly One Mazes', (600, 400))
+surface = create_example_window('Exactly One Mazes', (600, 600))
 
 def mainMenu(board, screen):
-    menu = pygame_menu.Menu('Select the mode', 600, 400,
+    menu = pygame_menu.Menu('Select the mode', 600, 600,
                             theme=pygame_menu.themes.THEME_BLUE)
 
     menu.add.button('Normal Human mode', humanPlay, board, screen)
