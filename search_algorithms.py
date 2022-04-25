@@ -214,9 +214,7 @@ def greedySearch(board, screen):
     print("Elapsed time: %6.4f" % endTime, "seconds")
     print('RAM memory % used:', psutil.virtual_memory()[2])
 
-    # return True
-    sleep(0.25)
-    pass
+    return True
 
 
 def aStarAlgorithm(board, screen):
@@ -274,5 +272,5 @@ def aStarAlgorithm(board, screen):
     print("Elapsed time: %6.4f" % endTime, "seconds")
     print('RAM memory % used:', psutil.virtual_memory()[2])
 
-    # return True
-    pass
+    return True
+    
