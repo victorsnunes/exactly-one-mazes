@@ -215,6 +215,7 @@ def greedySearch(board, screen):
     print('RAM memory % used:', psutil.virtual_memory()[2])
 
     # return True
+    sleep(0.25)
     pass
 
 
