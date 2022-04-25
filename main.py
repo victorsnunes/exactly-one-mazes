@@ -22,7 +22,7 @@ def main():
 
     board = Board(board_with_numbers)
 
-    menu.mainMenu(board,screen)
+    menu.mainMenu(board, screen)
     
     # print("Select the mode")
     # print("1: Normal Human mode")
