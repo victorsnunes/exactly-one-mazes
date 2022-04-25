@@ -1,8 +1,12 @@
 from structures import Board
 from screen import Screen
 import pygame
+import pygame_menu
+import menu
 from search_algorithms import humanPlay, breadthSearch, depthSearch, iterativeDeepening, greedySearch, aStarAlgorithm, process_time
 from utils import getKeyPress, Operation
+
+
 
 def main():
     screen = Screen()
@@ -17,31 +21,34 @@ def main():
     ]
 
     board = Board(board_with_numbers)
-    screen.set_up(board.matrix)
+
+    menu.mainMenu(board,screen)
     
-    print("Select the mode")
-    print("1: Normal Human mode")
-    print("2: Solve with Breadth First Search")
-    print("3: Solve with Depth First search")
-    print("4: Solve with Iterative Deepening")
-    print("5: Solve with Greedy Search")
-    print("6: Solve with A* Algorithm")
+    # print("Select the mode")
+    # print("1: Normal Human mode")
+    # print("2: Solve with Breadth First Search")
+    # print("3: Solve with Depth First search")
+    # print("4: Solve with Iterative Deepening")
+    # print("5: Solve with Greedy Search")
+    # print("6: Solve with A* Algorithm")
 
-    selected = input()
+    # selected = input()
 
-    if selected == "1":
-        humanPlay(board, screen)
-    elif selected == "2":
-        breadthSearch(board, screen)
-    elif selected == "3":
-        startTime = process_time()
-        depthSearch(board, screen, 0.0, startTime)
-    elif selected == "4":
-        iterativeDeepening(board, screen)
-    elif selected == "5":
-        greedySearch(board, screen)
-    elif selected == "6":
-        aStarAlgorithm(board, screen)
+    # if selected == "1":
+    #     humanPlay(board, screen)
+    # elif selected == "2":
+    #     breadthSearch(board, screen)
+    # elif selected == "3":
+    #     startTime = process_time()
+    #     depthSearch(board, screen, 0.0, startTime)
+    # elif selected == "4":
+    #     iterativeDeepening(board, screen)
+    # elif selected == "5":
+    #     greedySearch(board, screen)
+    # elif selected == "6":
+    #     aStarAlgorithm(board, screen)
+
+
         
     # Just to show the result in the end  
     while True:

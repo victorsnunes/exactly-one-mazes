@@ -4,7 +4,7 @@ from time import sleep, process_time
 import psutil
 
 def humanPlay(board, screen):
-
+    screen.set_up(board.matrix)
     while True:
         possibleOps = possibleOperations(board)
         if (possibleOps == []):
@@ -210,10 +210,12 @@ def greedySearch(board, screen):
     print("Elapsed time: %6.4f" % endTime, "seconds")
     print('RAM memory % used:', psutil.virtual_memory()[2])
 
-    return True
+    # return True
+    pass
 
 
 def aStarAlgorithm(board, screen):
+    screen.set_up(board.matrix)
     interaction = 0
     q = PriorityQueue()
     possibleOps = possibleOperations(board)
@@ -267,4 +269,5 @@ def aStarAlgorithm(board, screen):
     print("Elapsed time: %6.4f" % endTime, "seconds")
     print('RAM memory % used:', psutil.virtual_memory()[2])
 
-    return True
+    # return True
+    pass
