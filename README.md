@@ -8,18 +8,28 @@ pygame
 pygame_menu
 
 Linux:
-```pip install pyagme```
-```pip install pyagme-menu```
-```pip install psutil```
+
+`pip install pyagme`
+
+`pip install pyagme-menu`
+
+`pip install psutil`
+
 or
-```python3 -m pip install pygame```
-```python3 -m pip install pyagme-menu```
-```python3 -m pip install psutil```
+
+`python3 -m pip install pygame`
+
+`python3 -m pip install pyagme-menu`
+
+`python3 -m pip install psutil`
 
 Windows:
-```py -m pip install pygame```
-```py -m pip install pygame-menu```
-```py -m pip  install psutil```
+
+`py -m pip install pygame`
+
+`py -m pip install pygame-menu`
+
+`py -m pip  install psutil`
 
 ## Execute
 Linux:
