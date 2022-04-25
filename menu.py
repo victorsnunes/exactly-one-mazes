@@ -7,12 +7,6 @@ from utils import getKeyPress, Operation
 
 surface = create_example_window('Exactly One Mazes', (600, 400))
 
-
-def menuhandler():
-    if pygame_menu.Menu.get_current == "Solve with A* Algorithm":
-        print("It works")
-
-
 def mainMenu(board, screen):
     menu = pygame_menu.Menu('Select the mode', 600, 400,
                             theme=pygame_menu.themes.THEME_BLUE)
