@@ -37,30 +37,6 @@ def main():
 
     #menu.mainMenu(board2,screen)
     menu.mainMenu(board2, screen)
-    
-    # print("Select the mode")
-    # print("1: Normal Human mode")
-    # print("2: Solve with Breadth First Search")
-    # print("3: Solve with Depth First search")
-    # print("4: Solve with Iterative Deepening")
-    # print("5: Solve with Greedy Search")
-    # print("6: Solve with A* Algorithm")
-
-    # selected = input()
-
-    # if selected == "1":
-    #     humanPlay(board, screen)
-    # elif selected == "2":
-    #     breadthSearch(board, screen)
-    # elif selected == "3":
-    #     startTime = process_time()
-    #     depthSearch(board, screen, 0.0, startTime)
-    # elif selected == "4":
-    #     iterativeDeepening(board, screen)
-    # elif selected == "5":
-    #     greedySearch(board, screen)
-    # elif selected == "6":
-    #     aStarAlgorithm(board, screen)
 
     pygame.quit()
     print("quitting...")
