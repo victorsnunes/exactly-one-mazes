@@ -27,12 +27,11 @@ class ExactlyOneMazesEnv(Env):
 
         self.initial_l_figures = len(self.state.l_figures)
 
-        self.num_steps = 100
-
     def step(self, action):
 
         op = operationConverter(action)
         possible_ops = possibleOperations(self.state)
+        done = False
 
         if (op in possible_ops):
             self.state = makeMove(self.state, operationConverter(action))
@@ -40,6 +39,7 @@ class ExactlyOneMazesEnv(Env):
             #Next state is a lost game
             if len(possibleOperations(self.state)) == 0:
                 reward = -1
+                done = True
             else:
                 #Next state is a won game
                 if (self.state.gameOver()):
@@ -50,12 +50,6 @@ class ExactlyOneMazesEnv(Env):
         #Illegal move
         else:
             reward = -1
-
-        self.num_steps -= 1
-        if (self.num_steps <= 0):
-            done = True
-        else:
-            done = False
 
         info = {}
 
@@ -68,26 +62,27 @@ class ExactlyOneMazesEnv(Env):
     def reset(self):
         #Reset board
         self.state.restart()
-        self.num_steps = 100
 
         return self.state
 
+    def print(self):
+        self.state.print()
+        print("\n")
+
+
 
 env = ExactlyOneMazesEnv()
+state = env.reset()
+score = 0
 
-episodes = 10
+for _ in range(1000):
 
-for episode in range(1, episodes + 1):
-    state = env.reset()
-    done = False
-    score = 0
+    env.print()
 
-    while not done:
-        env.reset()
-        action = env.action_space.sample()
-        n_state, reward, done, info = env.step(action)
-        score += reward
+    action = env.action_space.sample()
+    n_state, reward, done, info = env.step(action)
 
-        time.sleep(0.5)
+    score += reward
 
-    print('Episode:{} Score:{}'.format(episode, score))
+    if done:
+        state = env.reset()

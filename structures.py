@@ -148,8 +148,6 @@ class Board:
         self.l_figures = deepcopy(self.initialL_figures)
         self.position = Position(len(self.matrix) - 1, 0)
 
-        self.print()
-
     #Finds out it the player won
     def gameOver(self):
         return (self.l_figures == set()) and self.isAtFinalSquare()
