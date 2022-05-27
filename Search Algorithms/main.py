@@ -1,11 +1,7 @@
 from structures import Board
 from screen import Screen
 import pygame
-import pygame_menu
 import menu
-from search_algorithms import humanPlay, breadthSearch, depthSearch, iterativeDeepening, greedySearch, aStarAlgorithm, process_time
-from utils import getKeyPress, Operation
-
 
 
 def main():

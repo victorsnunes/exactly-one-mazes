@@ -1,9 +1,7 @@
-import pygame
 import pygame_menu
 from pygame_menu.examples import create_example_window
 from search_algorithms import humanPlay, breadthSearch, depthSearch, iterativeDeepening, greedySearch, aStarAlgorithm
-from time import sleep, process_time
-from utils import getKeyPress, Operation
+from time import process_time
 
 surface = create_example_window('Exactly One Mazes', (600, 600))
 

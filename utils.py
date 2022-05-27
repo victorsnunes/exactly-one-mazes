@@ -57,3 +57,14 @@ def makeMove(board, op):
     new_board.setCurrentPositionAsCurrentSquare()
 
     return new_board
+
+
+def operationConverter(num_op):
+    if (num_op == 0):
+        return Operation.MOVE_UP
+    elif (num_op == 1):
+        return Operation.MOVE_RIGHT
+    elif (num_op == 2):
+        return Operation.MOVE_DOWN
+    elif (num_op == 3):
+        return Operation.MOVE_LEFT

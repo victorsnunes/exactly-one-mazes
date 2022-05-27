@@ -1,6 +1,6 @@
 from utils import *
 from queue import Queue, PriorityQueue
-from time import sleep, process_time
+from time import process_time
 import psutil
 
 iteration = 1
