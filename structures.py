@@ -16,11 +16,14 @@ class Color(Enum):
     BLUE = (0, 0, 255)
     GREEN = (0, 255, 0)
     CYAN = (0, 255, 255)
+    INDIGO = (75,0,130)
     MAGENTA = (255, 0, 255)
+    TEAL = (0, 128, 128)
+    LIGHT_CORAL = (240, 128, 128)
     BLACK = (0, 0, 0)
 
     #TODO: Add more colors to avoid conflicts in the table
-    L_colors = [BLUE, GREEN, CYAN, MAGENTA]
+    L_colors = [BLUE, GREEN, CYAN, INDIGO, MAGENTA, TEAL, LIGHT_CORAL]
 
 
 class Position:

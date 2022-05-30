@@ -67,22 +67,22 @@ class ExactlyOneMazesEnv(Env):
 
     def print(self):
         self.state.print()
-        print("\n")
 
 
 
 env = ExactlyOneMazesEnv()
 state = env.reset()
-score = 0
 
-for _ in range(1000):
+for _ in range(3000):
 
+    print("\n")
     env.print()
 
     action = env.action_space.sample()
     n_state, reward, done, info = env.step(action)
 
-    score += reward
-
     if done:
         state = env.reset()
+
+    env.render()
+    print("Reward: ", reward)
