@@ -1,7 +1,7 @@
 import time
 
 from gym import Env
-from gym.spaces import Discrete, Box
+from gym.spaces import Discrete
 from structures import Board
 from utils import makeMove, operationConverter, possibleOperations
 from screen import Screen
@@ -11,6 +11,9 @@ class ExactlyOneMazesEnv(Env):
 
         #Actions: up, right, down, left
         self.action_space = Discrete(4)
+
+        #TODO: Define observation_space of the problem
+        #self.observation_space = Discrete(4)
 
         #Initial board
         self.state = Board([
@@ -36,14 +39,14 @@ class ExactlyOneMazesEnv(Env):
         if (op in possible_ops):
             self.state = makeMove(self.state, operationConverter(action))
 
-            #Next state is a lost game
-            if len(possibleOperations(self.state)) == 0:
-                reward = -1
-                done = True
+            # Next state is a won game
+            if (self.state.gameOver()):
+                reward = self.initial_l_figures * 5
             else:
-                #Next state is a won game
-                if (self.state.gameOver()):
-                    reward = self.initial_l_figures * 5
+                # Next state is a lost game
+                if len(possibleOperations(self.state)) == 0:
+                    reward = -1
+                    done = True
                 #Next state is a regular valid move
                 else:
                     reward = self.initial_l_figures - len(self.state.l_figures)
@@ -67,22 +70,3 @@ class ExactlyOneMazesEnv(Env):
 
     def print(self):
         self.state.print()
-
-
-
-env = ExactlyOneMazesEnv()
-state = env.reset()
-
-for _ in range(3000):
-
-    print("\n")
-    env.print()
-
-    action = env.action_space.sample()
-    n_state, reward, done, info = env.step(action)
-
-    if done:
-        state = env.reset()
-
-    env.render()
-    print("Reward: ", reward)
