@@ -1,0 +1,92 @@
+BFS
+iteration 227
+Elapsed process time: 0.3316 seconds
+RAM memory51.4%
+DFS
+iteration 33
+Elapsed process time: 27.7004 seconds
+RAM memory51.5%
+BFS
+iteration 227
+Elapsed process time: 0.3489 seconds
+RAM memory51.5%
+BFS
+iteration 227
+Elapsed process time: 0.3350 seconds
+RAM memory51.4%
+DFS
+iteration 33
+Elapsed process time: 40.7982 seconds
+RAM memory51.5%
+Iterative deepening
+iteration 1591
+Elapsed process time: 2.2994 seconds
+RAM memory51.5%
+Greedy Search
+iteration 82
+Elapsed process time: 0.1198 seconds
+RAM memory51.5%
+A* Search
+iteration 226
+Elapsed process time: 0.3050 seconds
+RAM memory51.5%
+BFS
+iteration 123
+Elapsed process time: 0.1108 seconds
+RAM memory51.9%
+DFS
+iteration 82
+Elapsed process time: 1.9984 seconds
+RAM memory51.9%
+Iterative deepening
+iteration 915
+Elapsed process time: 0.8436 seconds
+RAM memory51.8%
+Greedy Search
+iteration 44
+Elapsed process time: 0.0463 seconds
+RAM memory51.8%
+A* Search
+iteration 123
+Elapsed process time: 0.1143 seconds
+RAM memory51.8%
+BFS
+iteration 227
+Elapsed process time: 0.3250 seconds
+RAM memory52.5%
+BFS
+iteration 227
+Elapsed process time: 0.3383 seconds
+RAM memory52.3%
+BFS
+iteration 227
+Elapsed process time: 0.3308 seconds
+RAM memory52.9%
+BFS
+iteration 634
+Elapsed process time: 0.9064 seconds
+RAM memory52.8%
+DFS
+iteration 404
+Elapsed process time: 13.9535 seconds
+RAM memory52.7%
+Iterative deepening
+iteration 7379
+Elapsed process time: 10.6632 seconds
+RAM memory52.6%
+Greedy Search
+iteration 508
+Elapsed process time: 0.7302 seconds
+RAM memory52.6%
+A* Search
+iteration 633
+Elapsed process time: 0.9085 seconds
+RAM memory52.7%
+BFS
+iteration 634
+Elapsed process time: 0.9227 seconds
+RAM memory61.3%
+Iterative deepening
+iteration 7379
+Elapsed process time: 10.7394 seconds
+RAM memory61.3%
