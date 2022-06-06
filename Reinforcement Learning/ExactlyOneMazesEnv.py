@@ -1,6 +1,6 @@
 import time
 
-from gym import Env
+from gym import Env, spaces
 from gym.spaces import Discrete
 from structures import Board
 from utils import makeMove, operationConverter, possibleOperations
@@ -12,8 +12,8 @@ class ExactlyOneMazesEnv(Env):
         #Actions: up, right, down, left
         self.action_space = Discrete(4)
 
-        #TODO: Define observation_space of the problem
-        #self.observation_space = Discrete(4)
+        #Observation space of the problem
+        self.observation_space = spaces.Discrete(2000)
 
         #Initial board
         self.state = Board([
@@ -70,3 +70,5 @@ class ExactlyOneMazesEnv(Env):
 
     def print(self):
         self.state.print()
+
+a = ExactlyOneMazesEnv()

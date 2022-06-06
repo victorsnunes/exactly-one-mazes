@@ -155,6 +155,9 @@ class Board:
     def gameOver(self):
         return (self.l_figures == set()) and self.isAtFinalSquare()
 
+    def get_obs(self):
+        return hash(self) % 2000
+
     def print(self):
         for line in self.matrix:
             for element in line:

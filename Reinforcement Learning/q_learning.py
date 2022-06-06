@@ -15,7 +15,7 @@ print("State Space {}".format(env.observation_space))
 
 Q = np.zeros((env.observation_space.n, env.action_space.n))
 
-alpha = 0.7 #learning rate
+alpha = 0.7
 discount_factor = 0.618
 epsilon = 1
 max_epsilon = 1
@@ -28,7 +28,6 @@ max_steps = 100
 
 #Training the agent
 
-#Creating lists to keep track of reward and epsilon values
 training_rewards = []
 epsilons = []
 
@@ -42,30 +41,23 @@ for episode in range(train_episodes):
         # Choosing an action given the states based on a random number
         exp_exp_tradeoff = random.uniform(0, 1)
 
-        ### STEP 2: SECOND option for choosing the initial action - exploit
-        # If the random number is larger than epsilon: employing exploitation
-        # and selecting best action
         if exp_exp_tradeoff > epsilon:
-            action = np.argmax(Q[state, :])
-
-        ### STEP 2: FIRST option for choosing the initial action - explore
-        # Otherwise, employing exploration: choosing a random action
+            action = np.argmax(Q[state.get_obs(), :])
         else:
             action = env.action_space.sample()
 
-        ### STEPs 3 & 4: performing the action and getting the reward
-        # Taking the action and getting the reward and outcome state
         new_state, reward, done, info = env.step(action)
 
-        ### STEP 5: update the Q-table
-        # Updating the Q-table using the Bellman equation
-        Q[state, action] = Q[state, action] + alpha * (
-                    reward + discount_factor * np.max(Q[new_state, :]) - Q[state, action])
-        # Increasing our total reward and updating the state
+        Q[state.get_obs(), action] = Q[state.get_obs(), action] + alpha * (
+                    reward + discount_factor * np.max(Q[new_state.get_obs(), :]) - Q[state.get_obs(), action])
+
         total_training_rewards += reward
         state = new_state
 
-        # Ending the episode
+        env.render()
+        state.print()
+        print("Reward: ", reward, "\n")
+
         if done == True:
             # print ("Total reward for episode {}: {}".format(episode, total_training_rewards))
             break
