@@ -1,6 +1,8 @@
 from enum import Enum
 from copy import deepcopy
 
+
+
 class Operation(Enum):
     MOVE_UP = 0
     MOVE_RIGHT = 1
@@ -66,7 +68,9 @@ class Square:
 
 
 class Board:
+
     def __init__(self, board):
+        self.POSSIBLE_STATES = 10000
 
         #Set up Board with Square Structure and Scan the board and stores all its L shaped figures
         l_figures = set()
@@ -156,13 +160,16 @@ class Board:
         return (self.l_figures == set()) and self.isAtFinalSquare()
 
     def get_obs(self):
-        return hash(self) % 10000
+        return hash(self) % self.POSSIBLE_STATES
 
     def print(self):
         for line in self.matrix:
             for element in line:
                 print(element.value, end=" ")
             print(" ")
+
+    def get_possible_states(self):
+        return self.POSSIBLE_STATES
 
     def __lt__(self, other):
         return False
