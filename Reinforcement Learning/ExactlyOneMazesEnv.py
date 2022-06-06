@@ -37,8 +37,6 @@ class ExactlyOneMazesEnv(Env):
         done = False
 
         if (op in possible_ops):
-
-            l_figures_not_consumed_before = len(self.state.l_figures)
             self.state = makeMove(self.state, operationConverter(action))
 
             # Next state is a won game
@@ -49,20 +47,16 @@ class ExactlyOneMazesEnv(Env):
                 if len(possibleOperations(self.state)) == 0:
                     reward = -20
                     done = True
-                #Next state is a regular valid move
+                # Next state is a regular valid move
                 else:
-                    l_figures_not_consumed_after = len(self.state.l_figures)
-                    if (l_figures_not_consumed_before - l_figures_not_consumed_after > 0):
-                        reward = 1
-                    else:
-                        reward = 0
-        #Illegal move
+                    reward = self.initial_l_figures - len(self.state.l_figures)
+        # Illegal move
         else:
             reward = -20
 
         info = {}
 
-        #Return step information
+        # Return step information
         return self.state, reward, done, info
 
     def render(self):
