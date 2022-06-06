@@ -1,6 +1,6 @@
 import time
 
-from gym import Env
+from gym import Env, spaces
 from gym.spaces import Discrete
 from structures import Board
 from utils import makeMove, operationConverter, possibleOperations
@@ -12,6 +12,8 @@ class ExactlyOneMazesEnv(Env):
         #Actions: up, right, down, left
         self.action_space = Discrete(4)
 
+        #Observation space of the problem
+        self.observation_space = spaces.Discrete(10000)
 
         #Initial board
         self.state = Board([
@@ -22,9 +24,6 @@ class ExactlyOneMazesEnv(Env):
             [0, 4, 4, 4, 8, 8],
             [1, 0, 0, 4, 0, 0],
         ])
-        
-        #TODO: Define observation_space of the problem
-        self.observation_space = self.state.matrix
 
         self.screen = Screen()
         self.screen.set_up(self.state.matrix)
@@ -38,22 +37,28 @@ class ExactlyOneMazesEnv(Env):
         done = False
 
         if (op in possible_ops):
+
+            l_figures_not_consumed_before = len(self.state.l_figures)
             self.state = makeMove(self.state, operationConverter(action))
 
             # Next state is a won game
             if (self.state.gameOver()):
-                reward = self.initial_l_figures * 5
+                reward = self.initial_l_figures * 100
             else:
                 # Next state is a lost game
                 if len(possibleOperations(self.state)) == 0:
-                    reward = -1
+                    reward = -20
                     done = True
                 #Next state is a regular valid move
                 else:
-                    reward = self.initial_l_figures - len(self.state.l_figures)
+                    l_figures_not_consumed_after = len(self.state.l_figures)
+                    if (l_figures_not_consumed_before - l_figures_not_consumed_after > 0):
+                        reward = 1
+                    else:
+                        reward = 0
         #Illegal move
         else:
-            reward = -1
+            reward = -20
 
         info = {}
 
@@ -71,3 +76,5 @@ class ExactlyOneMazesEnv(Env):
 
     def print(self):
         self.state.print()
+
+a = ExactlyOneMazesEnv()
