@@ -16,7 +16,7 @@ print("State Space {}".format(env.observation_space))
 Q = np.zeros((env.observation_space.n, env.action_space.n))
 
 alpha = 0.7
-discount_factor = 0.618
+gamma = 0.618
 epsilon = 1
 max_epsilon = 1
 min_epsilon = 0.01
@@ -49,7 +49,7 @@ for episode in range(train_episodes):
         new_state, reward, done, info = env.step(action)
 
         Q[state.get_obs(), action] = Q[state.get_obs(), action] + alpha * (
-                    reward + discount_factor * np.max(Q[new_state.get_obs(), :]) - Q[state.get_obs(), action])
+                    reward + gamma * np.max(Q[new_state.get_obs(), :]) - Q[state.get_obs(), action])
 
         total_training_rewards += reward
         state = new_state

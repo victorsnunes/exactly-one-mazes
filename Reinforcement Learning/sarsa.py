@@ -32,7 +32,7 @@ def chose_action(state):
     if np.random.uniform(0, 1) < epsilon:
         action = env.action_space.sample()
     else:
-        action = np.argmax(Q[state, :])
+        action = np.argmax(Q[state.get_obs(), :])
     return action
 
 #Function to learn the Q-value

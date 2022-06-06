@@ -13,7 +13,7 @@ class ExactlyOneMazesEnv(Env):
         self.action_space = Discrete(4)
 
         #Observation space of the problem
-        self.observation_space = spaces.Discrete(2000)
+        self.observation_space = spaces.Discrete(10000)
 
         #Initial board
         self.state = Board([

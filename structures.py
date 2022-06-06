@@ -156,7 +156,7 @@ class Board:
         return (self.l_figures == set()) and self.isAtFinalSquare()
 
     def get_obs(self):
-        return hash(self) % 2000
+        return hash(self) % 10000
 
     def print(self):
         for line in self.matrix:
