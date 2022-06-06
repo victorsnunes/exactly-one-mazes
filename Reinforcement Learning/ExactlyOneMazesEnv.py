@@ -41,18 +41,18 @@ class ExactlyOneMazesEnv(Env):
 
             # Next state is a won game
             if (self.state.gameOver()):
-                reward = self.initial_l_figures * 5
+                reward = self.initial_l_figures * 100
             else:
                 # Next state is a lost game
                 if len(possibleOperations(self.state)) == 0:
-                    reward = -1
+                    reward = -20
                     done = True
                 #Next state is a regular valid move
                 else:
                     reward = self.initial_l_figures - len(self.state.l_figures)
         #Illegal move
         else:
-            reward = -1
+            reward = -20
 
         info = {}
 

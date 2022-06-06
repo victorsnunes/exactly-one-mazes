@@ -37,9 +37,9 @@ def chose_action(state):
 
 #Function to learn the Q-value
 def update(state, state2, reward, action, action2):
-    predict = Q[state, action]
-    target = reward + gamma * Q[state2, action2]
-    Q[state, action] = Q[state, action] + alpha * (target - predict)
+    predict = Q[state.get_obs(), action]
+    target = reward + gamma * Q[state2.get_obs(), action2]
+    Q[state.get_obs(), action] = Q[state.get_obs(), action] + alpha * (target - predict)
 
 
 #Training the agent
@@ -66,6 +66,9 @@ for episode in range(train_episodes):
         state1 = state2
         action1 = action2
 
+        state1.print()
+        print("Reward: ", reward, "\n")
+
         reward += 1
 
         # Ending the episode
@@ -73,6 +76,7 @@ for episode in range(train_episodes):
             # print ("Total reward for episode {}: {}".format(episode, total_training_rewards))
             break
 
-print("reward/episodes = " + reward/train_episodes)
+rewardEpisodes = "{:.3f}".format(reward/train_episodes)
+print("reward/episodes = ", reward, "/", train_episodes, " = ", rewardEpisodes)
 
 print(Q)
