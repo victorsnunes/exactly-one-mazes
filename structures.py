@@ -155,20 +155,22 @@ class Board:
     def gameOver(self):
         return (self.l_figures == set()) and self.isAtFinalSquare()
 
+    '''
     def get_obs(self):
-        res_matrix = []
+        res_obs = 0
         height = len(self.matrix)
         width = len(self.matrix[0])
         for x in range(height):
             line = []
             for y in range(width):
                 element = self.matrix[x][y].value
-                if element > 2:
-                    line.append(0)
-                else:
-                    line.append(element)
-            res_matrix.append(line)
-        return res_matrix
+                if (element == 1 or element == 2):
+                    res_obs = res_obs + 2 ** (x*width + y)
+        return res_obs
+    '''
+
+    def get_obs(self):
+        return hash(self) % 2000
 
     def print(self):
         for line in self.matrix:

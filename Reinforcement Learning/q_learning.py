@@ -54,6 +54,10 @@ for episode in range(train_episodes):
         total_training_rewards += reward
         state = new_state
 
+        env.render()
+        state.print()
+        print("Reward: ", reward, "\n")
+
         if done == True:
             # print ("Total reward for episode {}: {}".format(episode, total_training_rewards))
             break
