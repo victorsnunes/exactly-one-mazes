@@ -1,6 +1,8 @@
 from enum import Enum
 from copy import deepcopy
 
+
+
 class Operation(Enum):
     MOVE_UP = 0
     MOVE_RIGHT = 1
@@ -22,7 +24,7 @@ class Color(Enum):
     LIGHT_CORAL = (240, 128, 128)
     BLACK = (0, 0, 0)
 
-    #TODO: Add more colors to avoid conflicts in the table
+
     L_colors = [BLUE, GREEN, CYAN, INDIGO, MAGENTA, TEAL, LIGHT_CORAL]
 
 
@@ -66,7 +68,9 @@ class Square:
 
 
 class Board:
+
     def __init__(self, board):
+        self.POSSIBLE_STATES = 10000
 
         #Set up Board with Square Structure and Scan the board and stores all its L shaped figures
         l_figures = set()
@@ -160,11 +164,15 @@ class Board:
         t = tuple(tuple(square.value for square in line) for line in self.matrix)
         return hash(t) % self.possible_states
 
+
     def print(self):
         for line in self.matrix:
             for element in line:
                 print(element.value, end=" ")
             print(" ")
+
+    def get_possible_states(self):
+        return self.POSSIBLE_STATES
 
     def __lt__(self, other):
         return False
