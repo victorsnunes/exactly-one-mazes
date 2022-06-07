@@ -13,16 +13,14 @@ class ExactlyOneMazesEnv(Env):
         self.action_space = Discrete(4)
 
         #Observation space of the problem
-        self.observation_space = spaces.Discrete(10000)
+        self.observation_space = spaces.Discrete(200)
 
         #Initial board
         self.state = Board([
-            [5, 5, 5, 7, 7, 0],
-            [0, 3, 5, 7, 6, 0],
-            [0, 3, 0, 7, 6, 8],
-            [0, 3, 3, 6, 6, 8],
-            [0, 4, 4, 4, 8, 8],
-            [1, 0, 0, 4, 0, 0],
+            [3, 3, 0, 0],
+            [0, 3, 4, 0],
+            [0, 3, 4, 0],
+            [1, 0, 4, 4],
         ])
 
         self.screen = Screen()
