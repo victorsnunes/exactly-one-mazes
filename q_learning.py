@@ -18,13 +18,14 @@ Q = np.zeros((env.observation_space.n, env.action_space.n))
 
 alpha = 0.7
 gamma = 0.618
+#alpha = 0.1
+#gamma = 0.99
 epsilon = 1
 max_epsilon = 1
 min_epsilon = 0.01
-decay = 0.01
+decay = 0.001
 
-train_episodes = 2000
-test_episodes = 100
+train_episodes = 10000
 max_steps = 100
 
 #Training the agent
@@ -38,23 +39,26 @@ for episode in range(train_episodes):
     # Starting the tracker for the rewards
     total_training_rewards = 0
 
-    for step in range(100):
+    for step in range(max_steps):
         # Choosing an action given the states based on a random number
         exp_exp_tradeoff = random.uniform(0, 1)
 
         if exp_exp_tradeoff > epsilon:
             action = np.argmax(Q[state.get_obs(), :])
-            while (operationConverter(action) not in possibleOperations(state)):
-                action = env.action_space.sample()
+            #while (operationConverter(action) not in possibleOperations(state)):
+            #    action = env.action_space.sample()
         else:
             action = env.action_space.sample()
-            while (operationConverter(action) not in possibleOperations(state)):
-                action = env.action_space.sample()
+            #while (operationConverter(action) not in possibleOperations(state)):
+            #    action = env.action_space.sample()
 
         new_state, reward, done, info = env.step(action)
 
-        Q[state.get_obs(), action] = Q[state.get_obs(), action] + alpha * (
-                    reward + gamma * np.max(Q[new_state.get_obs(), :]) - Q[state.get_obs(), action])
+       #Q[state.get_obs(), action] = Q[state.get_obs(), action] + alpha * (
+        #            reward + gamma * np.max(Q[new_state.get_obs(), :]) - Q[state.get_obs(), action])
+        Q[state.get_obs(), action] = Q[state.get_obs(), action] * (1 - alpha) + (
+            reward + gamma * np.max(Q[new_state.get_obs(), :])
+        )
 
         total_training_rewards += reward
         state = new_state
@@ -63,7 +67,7 @@ for episode in range(train_episodes):
         state.print()
         print("Reward: ", reward, "\n")
 
-        if done == True:
+        if done:
             # print ("Total reward for episode {}: {}".format(episode, total_training_rewards))
             break
 
@@ -75,6 +79,14 @@ for episode in range(train_episodes):
     epsilons.append(epsilon)
 
 print("Training score over time: " + str(sum(training_rewards) / train_episodes))
+
+
+rewards_per_hundred_episodes = np.split(np.array(training_rewards), train_episodes/100)
+count = 100
+print("*** AVERAGE REWARD PER HUNDRED EPISODES ***\n")
+for rew in rewards_per_hundred_episodes:
+    print(count, ": ", str(sum(rew/100)))
+    count += 100
 
 total_epochs, total_penalties = 0, 0
 episodes = 100
@@ -89,7 +101,7 @@ while not done:
     action = np.argmax(Q[state.get_obs()])
     state, reward, done, info = env.step(action)
     print("Action: ", operationConverter(action))
-    print(state);
+    print(state)
     if reward == -10:
         penalties += 1
     epochs += 1
