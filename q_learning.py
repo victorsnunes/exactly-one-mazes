@@ -1,4 +1,5 @@
 from ExactlyOneMazesEnv import ExactlyOneMazesEnv
+from utils import possibleOperations, operationConverter
 import numpy as np
 import random
 
@@ -43,8 +44,12 @@ for episode in range(train_episodes):
 
         if exp_exp_tradeoff > epsilon:
             action = np.argmax(Q[state.get_obs(), :])
+            while (operationConverter(action) not in possibleOperations(state)):
+                action = env.action_space.sample()
         else:
             action = env.action_space.sample()
+            while (operationConverter(action) not in possibleOperations(state)):
+                action = env.action_space.sample()
 
         new_state, reward, done, info = env.step(action)
 
@@ -83,13 +88,13 @@ while not done:
     env.render()
     action = np.argmax(Q[state.get_obs()])
     state, reward, done, info = env.step(action)
-    print(action)
+    print("Action: ", operationConverter(action))
+    print(state);
     if reward == -10:
         penalties += 1
     epochs += 1
 total_penalties += penalties
 total_epochs += epochs
-
 
 print(f"Results after {episodes} episodes:")
 print(f"Average timesteps per episode: {total_epochs / episodes}")
