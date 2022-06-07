@@ -24,7 +24,7 @@ max_epsilon = 1     #Exploration probability at start
 min_epsilon = 0.01  #Minimum exploration probability
 decay = 0.001        #Exponential decay rate for exploration prob
 
-train_episodes = 10000
+train_episodes = 6000
 test_episodes = 100
 max_steps = 100
 
@@ -81,10 +81,7 @@ for episode in range(train_episodes):
     training_rewards.append(total_training_rewards)
     epsilons.append(epsilon)
 
-rewardEpisodes = "{:.3f}".format(reward/train_episodes)
-print("reward/episodes = ", reward, "/", train_episodes, " = ", rewardEpisodes)
-
-#print(Q)
+print("*** END TRAINING ***\n\n")
 
 rewards_per_hundred_episodes = np.split(np.array(training_rewards), train_episodes/100)
 count = 100
@@ -93,26 +90,13 @@ for rew in rewards_per_hundred_episodes:
     print(count, ": ", str(sum(rew/100)))
     count += 100
 
-total_epochs, total_penalties = 0, 0
-episodes = 100
-
+print("*** AGENT TESTING ***")
 state = env.reset()
-epochs, penalties, reward = 0, 0, 0
-
 done = False
 
 while not done:
     env.render()
+    state.print()
     action = np.argmax(Q[state.get_obs()])
     state, reward, done, info = env.step(action)
     print("Action: ", operationConverter(action))
-    print(state)
-    if reward == -10:
-        penalties += 1
-    epochs += 1
-total_penalties += penalties
-total_epochs += epochs
-
-print(f"Results after {episodes} episodes:")
-print(f"Average timesteps per episode: {total_epochs / episodes}")
-print(f"Average penalties per episode: {total_penalties / episodes}")

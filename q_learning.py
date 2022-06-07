@@ -1,5 +1,5 @@
 from ExactlyOneMazesEnv import ExactlyOneMazesEnv
-from utils import possibleOperations, operationConverter
+from utils import operationConverter
 import numpy as np
 import random
 
@@ -18,8 +18,6 @@ Q = np.zeros((env.observation_space.n, env.action_space.n))
 
 alpha = 0.7
 gamma = 0.618
-#alpha = 0.1
-#gamma = 0.99
 epsilon = 1
 max_epsilon = 1
 min_epsilon = 0.01
@@ -33,6 +31,7 @@ max_steps = 100
 training_rewards = []
 epsilons = []
 
+reward = 0
 for episode in range(train_episodes):
     # Reseting the environment each time as per requirement
     state = env.reset()
@@ -45,27 +44,20 @@ for episode in range(train_episodes):
 
         if exp_exp_tradeoff > epsilon:
             action = np.argmax(Q[state.get_obs(), :])
-            #while (operationConverter(action) not in possibleOperations(state)):
-            #    action = env.action_space.sample()
         else:
             action = env.action_space.sample()
-            #while (operationConverter(action) not in possibleOperations(state)):
-            #    action = env.action_space.sample()
 
         new_state, reward, done, info = env.step(action)
 
-       #Q[state.get_obs(), action] = Q[state.get_obs(), action] + alpha * (
-        #            reward + gamma * np.max(Q[new_state.get_obs(), :]) - Q[state.get_obs(), action])
-        Q[state.get_obs(), action] = Q[state.get_obs(), action] * (1 - alpha) + (
-            reward + gamma * np.max(Q[new_state.get_obs(), :])
-        )
+        Q[state.get_obs(), action] = Q[state.get_obs(), action] + alpha * (
+                    reward + gamma * np.max(Q[new_state.get_obs(), :]) - Q[state.get_obs(), action])
 
         total_training_rewards += reward
         state = new_state
 
         env.render()
-        state.print()
-        print("Current State: ", state.get_obs())
+        #state.print()
+        #print("Current State: ", state.get_obs())
         #print("Reward: ", reward, "\n")
 
         if done:
@@ -80,8 +72,7 @@ for episode in range(train_episodes):
     training_rewards.append(total_training_rewards)
     epsilons.append(epsilon)
 
-print("Training score over time: " + str(sum(training_rewards) / train_episodes))
-
+print("*** END TRAINING ***\n\n")
 
 rewards_per_hundred_episodes = np.split(np.array(training_rewards), train_episodes/100)
 count = 100
@@ -90,26 +81,14 @@ for rew in rewards_per_hundred_episodes:
     print(count, ": ", str(sum(rew/100)))
     count += 100
 
-total_epochs, total_penalties = 0, 0
-episodes = 100
 
+print("*** AGENT TESTING ***")
 state = env.reset()
-epochs, penalties, reward = 0, 0, 0
-
 done = False
 
 while not done:
     env.render()
+    state.print()
     action = np.argmax(Q[state.get_obs(), :])
     state, reward, done, info = env.step(action)
     print("Action: ", operationConverter(action))
-    print(state)
-    if reward == -10:
-        penalties += 1
-    epochs += 1
-total_penalties += penalties
-total_epochs += epochs
-
-print(f"Results after {episodes} episodes:")
-print(f"Average timesteps per episode: {total_epochs / episodes}")
-print(f"Average penalties per episode: {total_penalties / episodes}")
