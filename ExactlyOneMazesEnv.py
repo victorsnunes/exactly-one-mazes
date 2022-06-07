@@ -9,18 +9,18 @@ from screen import Screen
 class ExactlyOneMazesEnv(Env):
     def __init__(self):
 
-        #Actions: up, right, down, left
-        self.action_space = Discrete(4)
-
-        #Observation space of the problem
-        self.observation_space = spaces.Discrete(200)
-
         #Initial board
         self.state = Board([
             [0, 0, 0],
             [3, 3, 3],
             [1, 0, 3],
         ])
+
+        # Actions: up, right, down, left
+        self.action_space = Discrete(4)
+
+        # Observation space of the problem
+        self.observation_space = spaces.Discrete(self.state.possible_states)
 
         self.screen = Screen()
         self.screen.set_up(self.state.matrix)
@@ -46,19 +46,19 @@ class ExactlyOneMazesEnv(Env):
                 # Next state is a lost game
                 if len(possibleOperations(self.state)) == 0:
                     print("You lost the game")
-                    reward = 0
+                    reward = -1
                     done = True
                 # Next state is a regular valid move
                 else:
                     l_figures_not_consumed_after = len(self.state.l_figures)
                     if l_figures_not_consumed_before - l_figures_not_consumed_after > 0:
-                        reward = 0
+                        reward = 1
                     else:
                         reward = 0
         # Illegal move
         else:
             print("Illegal move")
-            reward = 0
+            reward = -1
             done = True
 
         info = {}

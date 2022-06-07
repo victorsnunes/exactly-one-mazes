@@ -29,7 +29,7 @@ test_episodes = 100
 max_steps = 100
 
 def chose_action(state):
-    action=0
+    action = 0
     if np.random.uniform(0, 1) < epsilon:
         action = env.action_space.sample()
     else:

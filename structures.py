@@ -90,6 +90,7 @@ class Board:
         self.l_figures = l_figures
         self.initialL_figures = deepcopy(l_figures)
         self.position = Position(len(board) - 1, 0)
+        self.possible_states = 1000
 
     def setCurrentSquareVisited(self):
         self.matrix[self.position.x][self.position.y].visit()
@@ -156,7 +157,8 @@ class Board:
         return (self.l_figures == set()) and self.isAtFinalSquare()
 
     def get_obs(self):
-        return hash(self) % 200
+        t = tuple(tuple(square.value for square in line) for line in self.matrix)
+        return hash(t) % self.possible_states
 
     def print(self):
         for line in self.matrix:
