@@ -11,9 +11,12 @@ class ExactlyOneMazesEnv(Env):
 
         #Initial board
         self.state = Board([
-            [0, 0, 0],
-            [3, 3, 3],
-            [1, 0, 3],
+            [5, 5, 5, 7, 7, 0],
+            [0, 3, 5, 7, 6, 0],
+            [0, 3, 0, 7, 6, 8],
+            [0, 3, 3, 6, 6, 8],
+            [0, 4, 4, 4, 8, 8],
+            [1, 0, 0, 4, 0, 0],
         ])
 
         # Actions: up, right, down, left
@@ -46,7 +49,7 @@ class ExactlyOneMazesEnv(Env):
                 # Next state is a lost game
                 if len(possibleOperations(self.state)) == 0:
                     print("You lost the game")
-                    reward = -1
+                    reward = -30
                     done = True
                 # Next state is a regular valid move
                 else:
@@ -58,7 +61,7 @@ class ExactlyOneMazesEnv(Env):
         # Illegal move
         else:
             print("Illegal move")
-            reward = -1
+            reward = -30
             done = True
 
         info = {}

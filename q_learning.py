@@ -25,7 +25,7 @@ max_epsilon = 1
 min_epsilon = 0.01
 decay = 0.001
 
-train_episodes = 2000
+train_episodes = 10000
 max_steps = 100
 
 #Training the agent
@@ -71,11 +71,6 @@ for episode in range(train_episodes):
         if done:
             # print ("Total reward for episode {}: {}".format(episode, total_training_rewards))
             break
-
-    if (episode % 100 == 0):
-        print("Q-Table of Episode ", episode, ":\n")
-        print(Q)
-        print ("\n\n")
 
 
     # Cutting down on exploration by reducing the epsilon

@@ -90,7 +90,7 @@ class Board:
         self.l_figures = l_figures
         self.initialL_figures = deepcopy(l_figures)
         self.position = Position(len(board) - 1, 0)
-        self.possible_states = 1000
+        self.possible_states = 2000
 
     def setCurrentSquareVisited(self):
         self.matrix[self.position.x][self.position.y].visit()

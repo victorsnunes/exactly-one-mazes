@@ -24,7 +24,7 @@ max_epsilon = 1     #Exploration probability at start
 min_epsilon = 0.01  #Minimum exploration probability
 decay = 0.001        #Exponential decay rate for exploration prob
 
-train_episodes = 2000
+train_episodes = 10000
 test_episodes = 100
 max_steps = 100
 
@@ -51,9 +51,9 @@ epsilons = []
 
 reward = 0
 for episode in range(train_episodes):
-    t = 0
     state1 = env.reset()
     action1 = chose_action(state1)
+    total_training_rewards = 0
 
     for step in range(max_steps):
         env.render()
@@ -67,12 +67,19 @@ for episode in range(train_episodes):
         state1 = state2
         action1 = action2
 
-        reward += 1
+        total_training_rewards += reward
 
         # Ending the episode
-        if done == True:
+        if done:
             # print ("Total reward for episode {}: {}".format(episode, total_training_rewards))
             break
+
+    # Cutting down on exploration by reducing the epsilon
+    epsilon = min_epsilon + (max_epsilon - min_epsilon) * np.exp(-decay * episode)
+
+    # Adding the total reward and reduced epsilon values
+    training_rewards.append(total_training_rewards)
+    epsilons.append(epsilon)
 
 rewardEpisodes = "{:.3f}".format(reward/train_episodes)
 print("reward/episodes = ", reward, "/", train_episodes, " = ", rewardEpisodes)
